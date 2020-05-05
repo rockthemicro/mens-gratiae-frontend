@@ -1,9 +1,18 @@
 import React from 'react';
-import logo from './logo.svg';
+import logo from '../../logo.svg';
 import './App.css';
+import { connect } from 'react-redux';
+import simpleAction from '../../actions/simpleAction';
 
-function App() {
-  return (
+const mapStateToProps = state => ({
+  ...state
+})
+
+const mapDispatchToProps = dispatch => ({
+  simpleAction: () => dispatch(simpleAction())
+})
+
+const  App = () => (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
@@ -20,7 +29,7 @@ function App() {
         </a>
       </header>
     </div>
-  );
-}
+);
 
-export default App;
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
