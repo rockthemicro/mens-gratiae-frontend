@@ -6,12 +6,12 @@ const Login = (props) => {
     };
     return (
         <div>
+            <button onClick={goBack}>back</button>
             <pre>
                 {
                     JSON.stringify(props)
                 }
             </pre>
-            <button onClick={goBack}>back</button>
         </div>
     );
 };
