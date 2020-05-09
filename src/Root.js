@@ -16,7 +16,8 @@ const { Header, Content, Footer } = Layout;
 const ContentDiv = styled.div`
     background: #fff;
     padding: 24px;
-    //min-height: 280px;
+    height: 100%;
+    overflow: auto;
 `;
 
 const Logo = styled.div`
