@@ -2,10 +2,20 @@ import React from 'react';
 import { Form, Input, Button, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
+import {connect} from "react-redux";
+import logInStatusAction from "../../actions/logInStatusAction";
+
+const mapStateToProps = state => ({
+});
+
+const mapDispatchToProps = dispatch => ({
+    logInStatusAction: () => dispatch(logInStatusAction())
+});
 
 const Login = (props) => {
     const onFinish = values => {
-        console.log('Received values of form: ', values);
+        props.logInStatusAction();
+        props.history.goBack();
     };
 
     return (
@@ -66,4 +76,4 @@ const Login = (props) => {
     );
 };
 
-export default Login;
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

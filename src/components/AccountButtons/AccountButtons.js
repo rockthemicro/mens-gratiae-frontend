@@ -1,9 +1,7 @@
 
 import React from 'react';
 import {connect} from 'react-redux';
-import logInStatusAction from "../../actions/logInStatusAction";
 import logOutStatusAction from "../../actions/logOutStatusAction";
-import PropTypes from 'prop-types';
 import {withRouter} from "react-router-dom";
 import {compose} from "redux";
 
@@ -12,8 +10,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    logInStatusAction: () => dispatch(logInStatusAction),
-    logOutStatusAction: () => dispatch(logOutStatusAction)
+    logOutStatusAction: () => dispatch(logOutStatusAction())
 });
 
 const AccountButtons = (props) => {
@@ -27,7 +24,7 @@ const AccountButtons = (props) => {
     };
 
     const handleLogout = () => {
-        alert("logout");
+        props.logOutStatusAction();
     };
 
     return (
@@ -59,10 +56,6 @@ const AccountButtons = (props) => {
             }
         </div>
     );
-};
-
-AccountButtons.propTypes = {
-    logInStatusReducer: PropTypes.object.isRequired
 };
 
 export default compose(
