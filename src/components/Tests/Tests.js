@@ -1,8 +1,20 @@
 import React from "react";
 import {connect} from "react-redux";
 import {List, Avatar} from 'antd';
+import styled from 'styled-components';
 
-const mapStateToProps = state => ({});
+const ClickableStyle = styled.div`
+    cursor: pointer;
+    font-weight: bold;
+    &:hover {
+        text-decoration: underline;
+        color: blue
+    }
+`;
+
+const mapStateToProps = state => ({
+    logInStatusReducer: state.logInStatusReducer
+});
 
 const mapDispatchToProps = dispatch => ({});
 
@@ -11,6 +23,8 @@ const Tests = (props) => {
     const RO = 'ro';
     const IT = 'it';
     const EN = 'en';
+
+    //Luata prin call la BE
     const data = [{
         title: 'Research1',
         description: 'Description of first research',
@@ -62,25 +76,36 @@ const Tests = (props) => {
     }];
 
     const getFlagPath = (language) => {
-      if (language === RO) {
-          return require('../../resources/romania-flag.svg');
-      } else if (language === IT) {
-          return require('../../resources/italian-flag.png');
-      } else if (language === EN) {
-          return require('../../resources/england-flag.png');
-      }
+        if (language === RO) {
+            return require('../../resources/romania-flag.svg');
+        } else if (language === IT) {
+            return require('../../resources/italian-flag.png');
+        } else if (language === EN) {
+            return require('../../resources/england-flag.png');
+        }
+    };
+
+    const getActions = () => {
+        //neavand alt fel de utilizatori decat admin, imi permit sa verific daca e logat doar TODO: sa schimbam conditia
+        if (props.logInStatusReducer.loggedIn) {
+            return [<ClickableStyle>EDIT</ClickableStyle>]
+        }
+
+        return [];
     };
 
     return (
         <div>
             <List
-                itemLayout="horizontal"
+                itemLayout='horizontal'
+                size='large'
                 dataSource={data}
+
                 renderItem={item => (
-                    <List.Item>
+                    <List.Item actions={getActions()}>
                         <List.Item.Meta
-                            avatar={<Avatar src={getFlagPath(item.language)} />}
-                            title={item.title}
+                            avatar={<Avatar src={getFlagPath(item.language)}/>}
+                            title={<ClickableStyle> {item.title} </ClickableStyle>}
                             description={item.description}
                         />
                     </List.Item>
