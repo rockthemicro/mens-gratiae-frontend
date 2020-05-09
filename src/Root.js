@@ -1,11 +1,15 @@
 import React from 'react';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
-import App from './components/App';
 import Login from './components/Login';
-import { Layout, Menu } from 'antd';
+import { Layout } from 'antd';
 import styled from 'styled-components';
 import 'antd/dist/antd.css';
-import AccountButtons from "./components/AccountButtons/AccountButtons";
+import AccountButtons from "./components/AccountButtons";
+import HeaderMenu from "./components/HeaderMenu";
+import About from "./components/About";
+import Tests from "./components/Tests";
+import Contact from "./components/Contact";
+import Home from "./components/Home";
 
 const { Header, Content, Footer } = Layout;
 
@@ -36,16 +40,8 @@ const Root = () => (
                         <Logo>
                             <img src={require('./resources/head.png')} alt="" style={{ height: "100%", width: "100%" }}/>
                         </Logo>
-                        <Menu
-                            theme="dark" mode='horizontal'
-                            defaultSelectedKeys={['home']}
-                            style={{height: '100%', float: 'left', fontSize: '20px'}}
-                        >
-                            <Menu.Item key="home">Home</Menu.Item>
-                            <Menu.Item key="about">About</Menu.Item>
-                            <Menu.Item key="tests">Tests</Menu.Item>
-                            <Menu.Item key="contact">Contact</Menu.Item>
-                        </Menu>
+
+                        <HeaderMenu/>
 
                         <AccountButtons/>
                     </Header>
@@ -53,8 +49,12 @@ const Root = () => (
 
                 <Content style={{padding: '50px 50px 0px'}}>
                     <ContentDiv>
-                            <Route exact path="/" component={App}/>
-                            <Route exact path="/login" component={Login}/>
+                        <Route exact path="/" component={Home}/>
+                        <Route exact path="/about" component={About}/>
+                        <Route exact path="/tests" component={Tests}/>
+                        <Route exact path="/contact" component={Contact}/>
+
+                        <Route exact path="/login" component={Login}/>
                     </ContentDiv>
                 </Content>
 

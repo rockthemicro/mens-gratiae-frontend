@@ -10,21 +10,16 @@ const mapDispatchToProps = dispatch => ({
     simpleAction: () => dispatch(simpleAction())
 });
 
-const App = (props) => {
+const Home = (props) => {
 
     const action = (event) => {
         props.simpleAction();
     };
 
-    const goToLogin = (event) => {
-        props.history.push("/login");
-    };
-
     return (
-        <div className="App">
+        <div>
 
             <button onClick={action}>blabla</button>
-            <button onClick={goToLogin}>login</button>
             <pre>
                 {
                     JSON.stringify(props)
@@ -35,4 +30,4 @@ const App = (props) => {
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
