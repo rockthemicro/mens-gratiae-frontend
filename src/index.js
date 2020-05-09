@@ -9,6 +9,9 @@ import {Provider} from 'react-redux';
 const initialState = {
     simpleReducer: {
         result: 'first'
+    },
+    logInStatusReducer: {
+        loggedIn: false
     }
 };
 
