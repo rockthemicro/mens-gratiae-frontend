@@ -20,12 +20,12 @@ const HeaderMenu = (props) => {
         props.history.push("/about");
     };
 
-    const handleTests = () => {
-        props.history.push("/tests");
+    const handleResearch = () => {
+        props.history.push("/research");
     };
 
     const handleContact = () => {
-        props.history.push("/Contact");
+        props.history.push("/contact");
     };
 
     return (
@@ -36,7 +36,7 @@ const HeaderMenu = (props) => {
         >
             <Menu.Item key="home" onClick={handleHome}>Home</Menu.Item>
             <Menu.Item key="about" onClick={handleAbout}>About</Menu.Item>
-            <Menu.Item key="tests" onClick={handleTests}>Tests</Menu.Item>
+            <Menu.Item key="research" onClick={handleResearch}>Research</Menu.Item>
             <Menu.Item key="contact" onClick={handleContact}>Contact</Menu.Item>
         </Menu>
     );
