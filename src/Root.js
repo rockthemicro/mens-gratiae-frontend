@@ -7,9 +7,11 @@ import 'antd/dist/antd.css';
 import AccountButtons from "./components/AccountButtons";
 import HeaderMenu from "./components/HeaderMenu";
 import About from "./components/About";
-import Tests from "./components/Tests";
+import Research from "./components/Research";
 import Contact from "./components/Contact";
 import Home from "./components/Home";
+import ResearchForm from "./components/ResearchForm";
+import AddResearchForm from "./components/AddResearchForm";
 
 const { Header, Content, Footer } = Layout;
 
@@ -52,10 +54,13 @@ const Root = () => (
                     <ContentDiv>
                         <Route exact path="/" component={Home}/>
                         <Route exact path="/about" component={About}/>
-                        <Route exact path="/tests" component={Tests}/>
+                        <Route exact path="/research" component={Research}/>
                         <Route exact path="/contact" component={Contact}/>
 
                         <Route exact path="/login" component={Login}/>
+
+                        <Route exact path="/addResearch" component={AddResearchForm}/>
+                        <Route exact path="/fillResearch" component={ResearchForm}/>
                     </ContentDiv>
                 </Content>
 

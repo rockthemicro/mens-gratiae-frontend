@@ -1,6 +1,6 @@
 import React from "react";
 import {connect} from "react-redux";
-import {List, Avatar} from 'antd';
+import {List, Avatar, Button} from 'antd';
 import styled from 'styled-components';
 
 const ClickableStyle = styled.div`
@@ -18,7 +18,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({});
 
-const Tests = (props) => {
+const Research = (props) => {
 
     const RO = 'ro';
     const IT = 'it';
@@ -94,8 +94,22 @@ const Tests = (props) => {
         return [];
     };
 
+    const handleAddResearch = () => {
+        props.history.push("/addResearch");
+    };
+
+    const handleItemClick = () => {
+        props.history.push("/fillResearch")
+    };
+
     return (
         <div>
+            {   props.logInStatusReducer.loggedIn &&
+                <div>
+                    <Button type="primary" onClick={handleAddResearch}>Add Research</Button>
+                    <br/>
+                </div>
+            }
             <List
                 itemLayout='horizontal'
                 size='large'
@@ -105,7 +119,7 @@ const Tests = (props) => {
                     <List.Item actions={getActions()}>
                         <List.Item.Meta
                             avatar={<Avatar src={getFlagPath(item.language)}/>}
-                            title={<ClickableStyle> {item.title} </ClickableStyle>}
+                            title={<ClickableStyle onClick={handleItemClick}> {item.title} </ClickableStyle>}
                             description={item.description}
                         />
                     </List.Item>
@@ -115,4 +129,4 @@ const Tests = (props) => {
     );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Tests);
+export default connect(mapStateToProps, mapDispatchToProps)(Research);
