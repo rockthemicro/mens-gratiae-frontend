@@ -12,6 +12,7 @@ import {
     Checkbox,
     Input
 } from "antd";
+import {QTYPE_MULTIPLE_CHOICE, QTYPE_RANGE, QTYPE_SINGLE_CHOICE, QTYPE_TEXT, QTYPE_YES_NO} from "../constants";
 
 const mapStateToProps = state => ({
 });
@@ -159,7 +160,7 @@ const ResearchForm = () => {
             >
                 {data.map((element, index) =>
                     {
-                        if (element.type === "yes-no") {
+                        if (element.type === QTYPE_YES_NO) {
                             return (
                                 <Form.Item
                                     name={index.toString()}
@@ -176,7 +177,7 @@ const ResearchForm = () => {
                                 </Form.Item>
                             );
 
-                        } else if (element.type === "range") {
+                        } else if (element.type === QTYPE_RANGE) {
                             return (
                                 <Form.Item
                                     name={index.toString()}
@@ -195,7 +196,7 @@ const ResearchForm = () => {
 
                                 </Form.Item>
                             );
-                        } else if (element.type === "multipleChoice") {
+                        } else if (element.type === QTYPE_MULTIPLE_CHOICE) {
                             return (
                                 <Form.Item
                                     name={index.toString()}
@@ -209,7 +210,7 @@ const ResearchForm = () => {
                                     </Checkbox.Group>
                                 </Form.Item>
                             );
-                        } else if (element.type === "text") {
+                        } else if (element.type === QTYPE_TEXT) {
                             return (
                                 <Form.Item
                                     name={index.toString()}
@@ -221,7 +222,7 @@ const ResearchForm = () => {
                                     <Input.TextArea rows={4}/>
                                 </Form.Item>
                             );
-                        } else if (element.type === "singleChoice") {
+                        } else if (element.type === QTYPE_SINGLE_CHOICE) {
                             return (
                                 <Form.Item
                                     name={index.toString()}
