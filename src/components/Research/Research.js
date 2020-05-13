@@ -95,7 +95,7 @@ const Research = (props) => {
     };
 
     const handleAddResearch = () => {
-        props.history.push("/addResearch");
+        props.history.push("/editResearch");
     };
 
     const handleItemClick = () => {

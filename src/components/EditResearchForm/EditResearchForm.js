@@ -39,7 +39,7 @@ const ClickableStyle = styled.div`
     }
 `;
 
-const AddResearchForm = (props) => {
+const EditResearchForm = (props) => {
 
     const onFinish = (values) => {
 
@@ -65,6 +65,10 @@ const AddResearchForm = (props) => {
 
     const handleAddQuestion = () => {
         props.editQuestionVisible();
+    };
+
+    const handleAddTest = () => {
+        props.history.push("/editTest");
     };
 
     return (
@@ -147,6 +151,7 @@ const AddResearchForm = (props) => {
                     wrapperCol={{
                         offset: 8,
                     }}
+                    name="add_question_button"
                 >
                     <Button type="default" onClick={handleAddQuestion}>
                         Add Question
@@ -196,6 +201,30 @@ const AddResearchForm = (props) => {
 
                 <Form.Item
                     wrapperCol={{
+                        span: 8,
+                        offset: 8,
+                    }}
+                    style={{
+                        margin: '50px 0 0',
+                        fontSize: '20px',
+                    }}
+                >
+                    Tests to be included in this research
+                </Form.Item>
+
+                <Form.Item
+                    wrapperCol={{
+                        offset: 8,
+                    }}
+                    name="add_test_button"
+                >
+                    <Button type="default" onClick={handleAddTest}>
+                        Add Test
+                    </Button>
+                </Form.Item>
+
+                <Form.Item
+                    wrapperCol={{
                         offset: 8,
                     }}
                 >
@@ -212,4 +241,4 @@ const AddResearchForm = (props) => {
 export default compose(
     withRouter,
     connect(mapStateToProps, mapDispatchToProps)
-)(AddResearchForm);
+)(EditResearchForm);
