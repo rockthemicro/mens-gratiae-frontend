@@ -39,7 +39,7 @@ const Research = (props) => {
         language: 'en'
     }, {
         title: 'Research4',
-        description: 'Description of forth research',
+        description: 'Description of fourth research',
         language: 'it'
     }, {
         title: 'Research1',
@@ -55,7 +55,7 @@ const Research = (props) => {
         language: 'ro'
     }, {
         title: 'Research4',
-        description: 'Description of forth research',
+        description: 'Description of fourth research',
         language: 'en'
     }, {
         title: 'Research1',
@@ -71,7 +71,7 @@ const Research = (props) => {
         language: 'ro'
     }, {
         title: 'Research4',
-        description: 'Description of forth research',
+        description: 'Description of fourth research',
         language: 'it'
     }];
 

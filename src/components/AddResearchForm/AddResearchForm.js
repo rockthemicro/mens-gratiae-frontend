@@ -10,6 +10,7 @@ import DownOutlined from "@ant-design/icons/lib/icons/DownOutlined";
 import EditQuestionForm from "../EditQuestionForm";
 import editQuestionVisibleAction from "../../actions/editQuestionVisibleAction";
 import editQuestionInvisibleAction from "../../actions/editQuestionInvisibleAction";
+import {QTYPE_RANGE, QTYPE_SINGLE_CHOICE, QTYPE_YES_NO} from "../constants";
 
 const mapStateToProps = state => ({
     editQuestionReducer: state.editQuestionReducer,
@@ -47,14 +48,19 @@ const AddResearchForm = (props) => {
     const detailsQuestions = [
         {
             title: 'Question1',
-            description: 'Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question',
-            type: 'range',
+            question: 'Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question',
+            type: QTYPE_RANGE,
         },
         {
             title: 'Question2',
-            description: 'Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question',
-            type: 'yes-no',
-        }
+            question: 'Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question',
+            type: QTYPE_YES_NO,
+        },
+        {
+            title: 'Question3',
+            question: 'Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question',
+            type: QTYPE_SINGLE_CHOICE,
+        },
     ];
 
     const handleAddQuestion = () => {
@@ -180,7 +186,7 @@ const AddResearchForm = (props) => {
 
                                 <List.Item.Meta
                                     title={item.title}
-                                    description={item.description}
+                                    description={item.question}
                                 />
                                 Type: {item.type}
                             </List.Item>
@@ -190,7 +196,7 @@ const AddResearchForm = (props) => {
 
                 <Form.Item
                     wrapperCol={{
-                        offset: 6,
+                        offset: 8,
                     }}
                 >
                     <Button type="primary" htmlType="submit">

@@ -1,7 +1,6 @@
 import React from "react";
 import {connect} from "react-redux";
 import 'antd/dist/antd.css';
-import styled from 'styled-components';
 import {withRouter} from "react-router-dom";
 import {compose} from "redux";
 import {
