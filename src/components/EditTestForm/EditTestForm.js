@@ -9,16 +9,12 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
 });
 
-const AddResearchForm = (props) => {
+const EditTestForm = (props) => {
+    return (<div>sal</div>);
 
-    return (
-        <div>
-            add research
-        </div>
-    );
 };
 
 export default compose(
     withRouter,
     connect(mapStateToProps, mapDispatchToProps)
-)(AddResearchForm);
+)(EditTestForm);

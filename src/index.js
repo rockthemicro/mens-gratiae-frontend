@@ -12,6 +12,9 @@ const initialState = {
     },
     logInStatusReducer: {
         loggedIn: false
+    },
+    editQuestionReducer: {
+        visible: false
     }
 };
 
