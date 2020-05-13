@@ -63,6 +63,17 @@ const EditResearchForm = (props) => {
         },
     ];
 
+    const tests = [
+        {
+            title: 'test1',
+            description: 'first test',
+        },
+        {
+            title: 'test2',
+            description: 'second test',
+        },
+    ];
+
     const handleAddQuestion = () => {
         props.editQuestionVisible();
     };
@@ -221,6 +232,37 @@ const EditResearchForm = (props) => {
                     <Button type="default" onClick={handleAddTest}>
                         Add Test
                     </Button>
+                </Form.Item>
+
+                <Form.Item
+                    wrapperCol={{
+                        span: 8,
+                        offset: 8,
+                    }}
+                >
+                    <List
+                        itemLayout='horizontal'
+                        size='large'
+                        dataSource={tests}
+
+                        renderItem={item => (
+                            <List.Item
+                                style={{padding: '16px 0'}}
+                                actions={[
+                                    <ClickableStyle>Edit</ClickableStyle>,
+                                    <ClickableStyle>Delete</ClickableStyle>,
+                                    <ClickableStyle><UpOutlined /></ClickableStyle>,
+                                    <ClickableStyle><DownOutlined /></ClickableStyle>,
+                                ]}
+                            >
+
+                                <List.Item.Meta
+                                    title={item.title}
+                                    description={item.description}
+                                />
+                            </List.Item>
+                        )}
+                    />
                 </Form.Item>
 
                 <Form.Item

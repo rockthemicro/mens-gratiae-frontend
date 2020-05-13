@@ -8,6 +8,7 @@ import editQuestionInvisibleAction from "../../actions/editQuestionInvisibleActi
 import UpOutlined from "@ant-design/icons/lib/icons/UpOutlined";
 import DownOutlined from "@ant-design/icons/lib/icons/DownOutlined";
 import styled from "styled-components";
+import EditTestQuestionForm from "../EditTestQuestionForm";
 
 const mapStateToProps = state => ({
     editQuestionReducer: state.editQuestionReducer,
@@ -123,7 +124,7 @@ const EditTestForm = (props) => {
                 onCancel={props.editQuestionInvisible}
                 footer={null}
             >
-
+                <EditTestQuestionForm/>
             </Modal>
 
             <Form.Item
