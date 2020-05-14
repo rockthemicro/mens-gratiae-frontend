@@ -1,7 +1,7 @@
 import {compose} from "redux";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import React from "react";
+import React, {useEffect} from "react";
 import {Button, Form, Input, List, Modal} from "antd";
 import editQuestionVisibleAction from "../../actions/editQuestionVisibleAction";
 import editQuestionInvisibleAction from "../../actions/editQuestionInvisibleAction";
@@ -42,6 +42,14 @@ const EditTestForm = (props) => {
 
     };
 
+    const divRef = React.useRef();
+
+    useEffect(() => {
+        setTimeout(() => {
+            divRef.current.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' });
+        }, 100);
+    }, []);
+
     const questions = [
         {
             title: 'Question1',
@@ -62,112 +70,117 @@ const EditTestForm = (props) => {
     };
 
     return (
-        <Form
-            name="test_form"
-            onFinish={onFinish}
-            {...formItemLayout}
+        <div
+            ref={divRef}
+            id="divParent"
         >
-
-            <Form.Item
-                name="testName"
-                label="Test Name"
-                rules={[
-                    {
-                        required: true,
-                        message: "Please Enter a Test Name",
-                    }
-                ]}
+            <Form
+                name="test_form"
+                onFinish={onFinish}
+                {...formItemLayout}
             >
-                <Input.TextArea rows={1}/>
-            </Form.Item>
 
-            <Form.Item
-                name="testDescription"
-                label="Test Description"
-                rules={[
-                    {
-                        required: true,
-                        message: "Please Enter a Test Description",
-                    }
-                ]}
-            >
-                <Input.TextArea rows={4}/>
-            </Form.Item>
+                <Form.Item
+                    name="testName"
+                    label="Test Name"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please Enter a Test Name",
+                        }
+                    ]}
+                >
+                    <Input.TextArea rows={1}/>
+                </Form.Item>
 
-            <Form.Item
-                wrapperCol={{
-                    span: 8,
-                    offset: 8,
-                }}
-                style={{
-                    margin: '50px 0 0',
-                    fontSize: '20px',
-                }}
-            >
-                Test Questions
-            </Form.Item>
+                <Form.Item
+                    name="testDescription"
+                    label="Test Description"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please Enter a Test Description",
+                        }
+                    ]}
+                >
+                    <Input.TextArea rows={4}/>
+                </Form.Item>
 
-            <Form.Item
-                wrapperCol={{
-                    offset: 8,
-                }}
-                name="add_question_button"
-            >
-                <Button type="default" onClick={handleAddQuestion}>
-                    Add Question
-                </Button>
-            </Form.Item>
+                <Form.Item
+                    wrapperCol={{
+                        span: 8,
+                        offset: 8,
+                    }}
+                    style={{
+                        margin: '50px 0 0',
+                        fontSize: '20px',
+                    }}
+                >
+                    Test Questions
+                </Form.Item>
 
-            <Modal
-                title="Add Question"
-                visible={props.editQuestionReducer.visible}
-                onCancel={props.editQuestionInvisible}
-                footer={null}
-            >
-                <EditTestQuestionForm/>
-            </Modal>
+                <Form.Item
+                    wrapperCol={{
+                        offset: 8,
+                    }}
+                    name="add_question_button"
+                >
+                    <Button type="default" onClick={handleAddQuestion}>
+                        Add Question
+                    </Button>
+                </Form.Item>
 
-            <Form.Item
-                wrapperCol={{
-                    span: 8,
-                    offset: 8,
-                }}
-            >
-                <List
-                    itemLayout='horizontal'
-                    size='large'
-                    dataSource={questions}
+                <Modal
+                    title="Add Question"
+                    visible={props.editQuestionReducer.visible}
+                    onCancel={props.editQuestionInvisible}
+                    footer={null}
+                >
+                    <EditTestQuestionForm/>
+                </Modal>
 
-                    renderItem={item => (
-                        <List.Item
-                            style={{padding: '16px 0'}}
-                            actions={[
-                                <ClickableStyle>Edit</ClickableStyle>,
-                                <ClickableStyle>Delete</ClickableStyle>,
-                                <ClickableStyle><UpOutlined /></ClickableStyle>,
-                                <ClickableStyle><DownOutlined /></ClickableStyle>,
-                            ]}
-                        >
+                <Form.Item
+                    wrapperCol={{
+                        span: 8,
+                        offset: 8,
+                    }}
+                >
+                    <List
+                        itemLayout='horizontal'
+                        size='large'
+                        dataSource={questions}
 
-                            <List.Item.Meta
-                                title={item.title}
-                                description={item.question}
-                            />
-                        </List.Item>
-                    )}
-                />
-            </Form.Item>
+                        renderItem={item => (
+                            <List.Item
+                                style={{padding: '16px 0'}}
+                                actions={[
+                                    <ClickableStyle>Edit</ClickableStyle>,
+                                    <ClickableStyle>Delete</ClickableStyle>,
+                                    <ClickableStyle><UpOutlined /></ClickableStyle>,
+                                    <ClickableStyle><DownOutlined /></ClickableStyle>,
+                                ]}
+                            >
 
-            <Form.Item
-                wrapperCol={{
-                    offset: 8,
-                }}
-            >
-                <Button type="primary" htmlType="submit">
-                    Submit
-                </Button>
-            </Form.Item>
-        </Form>
+                                <List.Item.Meta
+                                    title={item.title}
+                                    description={item.question}
+                                />
+                            </List.Item>
+                        )}
+                    />
+                </Form.Item>
+
+                <Form.Item
+                    wrapperCol={{
+                        offset: 8,
+                    }}
+                >
+                    <Button type="primary" htmlType="submit">
+                        Submit
+                    </Button>
+                </Form.Item>
+            </Form>
+        </div>
     );
 
 };
