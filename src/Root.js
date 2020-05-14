@@ -1,7 +1,7 @@
 import React from 'react';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import Login from './components/Login';
-import { Layout } from 'antd';
+import {Layout} from 'antd';
 import styled from 'styled-components';
 import 'antd/dist/antd.css';
 import AccountButtons from "./components/AccountButtons";
@@ -15,7 +15,7 @@ import EditResearchForm from "./components/EditResearchForm";
 import EditTestForm from "./components/EditTestForm";
 import TestForm from "./components/TestForm";
 
-const { Header, Content, Footer } = Layout;
+const {Header, Content, Footer} = Layout;
 
 const ContentDiv = styled.div`
     background: #fff;
@@ -44,7 +44,7 @@ const Root = () => (
                 <CustomHeader>
                     <Header>
                         <Logo>
-                            <img src={require('./resources/head.png')} alt="" style={{ height: "100%", width: "100%" }}/>
+                            <img src={require('./resources/head.png')} alt="" style={{height: "100%", width: "100%"}}/>
                         </Logo>
 
                         <HeaderMenu/>
@@ -53,7 +53,7 @@ const Root = () => (
                     </Header>
                 </CustomHeader>
 
-                <Content style={{padding: '50px 50px 0px'}}>
+                <Content style={{padding: '3% 15% 0%'}}>
                     <ContentDiv>
                         <Route exact path="/" component={Home}/>
                         <Route exact path="/about" component={About}/>
