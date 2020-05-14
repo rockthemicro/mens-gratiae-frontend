@@ -22,6 +22,7 @@ const ContentDiv = styled.div`
     padding: 24px;
     height: 100%;
     overflow: auto;
+    position: relative;
 `;
 
 const Logo = styled.div`
