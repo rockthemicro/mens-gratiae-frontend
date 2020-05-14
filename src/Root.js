@@ -13,6 +13,7 @@ import Home from "./components/Home";
 import ResearchForm from "./components/ResearchForm";
 import EditResearchForm from "./components/EditResearchForm";
 import EditTestForm from "./components/EditTestForm";
+import TestForm from "./components/TestForm";
 
 const { Header, Content, Footer } = Layout;
 
@@ -64,6 +65,7 @@ const Root = () => (
                         <Route exact path="/editTest" component={EditTestForm}/>
 
                         <Route exact path="/fillResearch" component={ResearchForm}/>
+                        <Route exact path="/fillTest" component={TestForm}/>
                     </ContentDiv>
                 </Content>
 
