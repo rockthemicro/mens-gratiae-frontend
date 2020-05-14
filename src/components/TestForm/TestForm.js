@@ -53,7 +53,7 @@ const TestForm = (props) => {
                 checkedList.push(true);
             }
         }
-        debugger;
+
         setRadiosChecked({
             [row]: checkedList
         });
@@ -63,7 +63,6 @@ const TestForm = (props) => {
         0: columns.map(() => false)
     });
 
-    debugger;
     const radios = {
         0: [
                 <Radio checked={radiosChecked[0][0]} value={{row: 0, column: 0}} onChange={handleRadioChange}/>,
@@ -130,19 +129,61 @@ const TestForm = (props) => {
         }
     ];
 
+    const handleSubmitClick = () => {
+        for (let checkedList of Object.values(radiosChecked)) {
+            let foundTrue = false;
+
+            for (let checked of checkedList) {
+                if (checked === true) {
+                    foundTrue = true;
+                    break;
+                }
+            }
+
+            if (foundTrue === false) {
+                alert('Please fill all the answers before submitting the test');
+                return;
+            }
+
+            alert('Test submitted');
+        }
+    };
+
+    const handleResetClick = () => {
+        let newRadiosChecked = {};
+
+        for (let key of Object.keys(radiosChecked)) {
+            newRadiosChecked[key] = columns.map(() => false);
+        }
+
+        setRadiosChecked(newRadiosChecked);
+    };
+
     return (
         <div>
             <Table
                 columns={columns}
                 dataSource={data}
                 size="small"
+                pagination={ false }
+                scroll={{ y: '35vw' }}
+
             />
 
-            <div>
+            <div style={{position: 'absolute', bottom: 20, left: 20}}>
                 <Button
                     type="primary"
+                    onClick={handleSubmitClick}
                 >
                     Submit
+                </Button>
+
+                <Button
+                    type="default"
+                    style={{margin: '0 15px'}}
+                    onClick={handleResetClick}
+                >
+                    Reset
                 </Button>
             </div>
         </div>
