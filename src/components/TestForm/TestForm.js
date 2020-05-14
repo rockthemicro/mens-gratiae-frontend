@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {compose} from "redux";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
-import {Radio, Table} from "antd";
+import {Button, Radio, Table} from "antd";
 
 const mapStateToProps = state => ({
 });
@@ -15,7 +15,7 @@ const TestForm = (props) => {
         {
             title: 'Question',
             dataIndex: 'question',
-            width: '50%'
+            width: '40%'
         },
         {
             title: 'Dezacord puternic',
@@ -77,13 +77,57 @@ const TestForm = (props) => {
     const data = [
         {
             key: 0,
-            question: 'Cand afara ninge, ma pun sa citesc o carte Cand afara ninge, ma pun sa citesc o carte Cand afara ninge, ma pun sa citesc o carte Cand afara ninge, ma pun sa citesc o carte Cand afara ninge, ma pun sa citesc o carte Cand afara ninge, ma pun sa citesc o carte',
+            question: 'salut',
             0: radios[0][0],
             1: radios[0][1],
             2: radios[0][2],
             3: radios[0][3],
             4: radios[0][4],
         },
+        {
+            key: 2,
+            question: 'da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da '
+        },
+        {
+            key: 3,
+            question: 'da'
+        },
+        {
+            key: 4,
+            question: 'da'
+        },
+        {
+            key: 5,
+            question: 'da'
+        },
+        {
+            key: 6,
+            question: 'da'
+        },
+        {
+            key: 7,
+            question: 'da'
+        },
+        {
+            key: 8,
+            question: 'da'
+        },
+        {
+            key: 9,
+            question: 'da'
+        },
+        {
+            key: 10,
+            question: 'da'
+        },
+        {
+            key: 11,
+            question: 'da'
+        },
+        {
+            key: 12,
+            question: 'da'
+        }
     ];
 
     return (
@@ -93,6 +137,14 @@ const TestForm = (props) => {
                 dataSource={data}
                 size="small"
             />
+
+            <div>
+                <Button
+                    type="primary"
+                >
+                    Submit
+                </Button>
+            </div>
         </div>
     );
 };
