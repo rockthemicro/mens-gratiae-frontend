@@ -1,12 +1,13 @@
 import React from 'react';
-import { Form, Input, Button, Checkbox } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import axios from 'axios';
+import {Form, Input, Button, Checkbox} from 'antd';
+import {UserOutlined, LockOutlined} from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import {connect} from "react-redux";
 import logInStatusAction from "../../actions/logInStatusAction";
+import endpoints from '../endpoints';
 
-const mapStateToProps = state => ({
-});
+const mapStateToProps = state => ({});
 
 const mapDispatchToProps = dispatch => ({
     logInStatusAction: () => dispatch(logInStatusAction())
@@ -14,8 +15,24 @@ const mapDispatchToProps = dispatch => ({
 
 const Login = (props) => {
     const onFinish = values => {
-        props.logInStatusAction();
-        props.history.goBack();
+
+        axios.get(endpoints.LOGIN, {
+            params: {
+                username: values.username,
+                password: values.password
+            }
+        })
+            .then((response) => {
+                if (response.data.status === 'OK') {
+                    props.logInStatusAction();
+                    props.history.goBack();
+                } else {
+                    alert('Username or password are incorrect. Please try again');
+                }
+            })
+            .catch(() => {
+                alert('Sorry, an internal error occurred. Please try again later');
+            });
     };
 
     return (
@@ -37,7 +54,7 @@ const Login = (props) => {
                     },
                 ]}
             >
-                <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+                <Input prefix={<UserOutlined className="site-form-item-icon"/>} placeholder="Username"/>
             </Form.Item>
 
             <Form.Item
@@ -50,7 +67,7 @@ const Login = (props) => {
                 ]}
             >
                 <Input.Password
-                    prefix={<LockOutlined className="site-form-item-icon" />}
+                    prefix={<LockOutlined className="site-form-item-icon"/>}
                     type="password"
                     placeholder="Password"
                 />
