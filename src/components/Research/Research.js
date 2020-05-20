@@ -1,7 +1,9 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
+import axios from 'axios';
 import {connect} from "react-redux";
 import {List, Avatar, Button} from 'antd';
 import styled from 'styled-components';
+import endpoints from '../endpoints';
 
 const ClickableStyle = styled.div`
     cursor: pointer;
@@ -20,60 +22,23 @@ const mapDispatchToProps = dispatch => ({});
 
 const Research = (props) => {
 
-    const RO = 'ro';
-    const IT = 'it';
-    const EN = 'en';
+    const RO = 'ROM';
+    const IT = 'ITA';
+    const EN = 'ENG';
 
-    //Luata prin call la BE
-    const data = [{
-        title: 'Research1',
-        description: 'Description of first research',
-        language: 'ro'
-    }, {
-        title: 'Research2',
-        description: 'Description of second research',
-        language: 'en'
-    }, {
-        title: 'Research3',
-        description: 'Description of third research',
-        language: 'en'
-    }, {
-        title: 'Research4',
-        description: 'Description of fourth research',
-        language: 'it'
-    }, {
-        title: 'Research1',
-        description: 'Description of first research',
-        language: 'ro'
-    }, {
-        title: 'Research2',
-        description: 'Description of second research',
-        language: 'en'
-    }, {
-        title: 'Research3',
-        description: 'Description of third research',
-        language: 'ro'
-    }, {
-        title: 'Research4',
-        description: 'Description of fourth research',
-        language: 'en'
-    }, {
-        title: 'Research1',
-        description: 'Description of first research',
-        language: 'ro'
-    }, {
-        title: 'Research2',
-        description: 'Description of second research',
-        language: 'it'
-    }, {
-        title: 'Research3',
-        description: 'Description of third research',
-        language: 'ro'
-    }, {
-        title: 'Research4',
-        description: 'Description of fourth research',
-        language: 'it'
-    }];
+    const [researches, setResearches] = useState([]);
+
+    useEffect(() => {
+        axios.get(endpoints.GET_ALL_RESEARCHES).then(({data}) => {
+            if (data.status === 'OK') {
+                setResearches(data.researches)
+            } else {
+                alert('Sorry, an internal server error occured. Please try again later');
+            }
+        }).catch(() => {
+            alert('Sorry, an internal server error occured. Please try again later');
+        })
+    }, []);
 
     const getFlagPath = (language) => {
         if (language === RO) {
@@ -104,23 +69,23 @@ const Research = (props) => {
 
     return (
         <div>
-            {   props.logInStatusReducer.loggedIn &&
-                <div>
-                    <Button type="primary" onClick={handleAddResearch}>Add Research</Button>
-                    <br/>
-                </div>
+            {props.logInStatusReducer.loggedIn &&
+            <div>
+                <Button type="primary" onClick={handleAddResearch}>Add Research</Button>
+                <br/>
+            </div>
             }
             <List
                 itemLayout='horizontal'
                 size='large'
-                dataSource={data}
+                dataSource={researches}
 
                 renderItem={item => (
                     <List.Item actions={getActions()}>
                         <List.Item.Meta
                             avatar={<Avatar src={getFlagPath(item.language)}/>}
                             title={<ClickableStyle onClick={handleItemClick}> {item.title} </ClickableStyle>}
-                            description={item.description}
+                            description={item.shortDesc}
                         />
                     </List.Item>
                 )}
