@@ -4,6 +4,7 @@ import {connect} from "react-redux";
 import {List, Avatar, Button} from 'antd';
 import styled from 'styled-components';
 import endpoints from '../endpoints';
+import formExistsAction from "../../actions/formExistsAction";
 
 const ClickableStyle = styled.div`
     cursor: pointer;
@@ -18,7 +19,9 @@ const mapStateToProps = state => ({
     logInStatusReducer: state.logInStatusReducer
 });
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+    formExistsAction: (form_exists) => dispatch(formExistsAction(form_exists)),
+});
 
 const Research = (props) => {
 
@@ -50,21 +53,33 @@ const Research = (props) => {
         }
     };
 
-    const getActions = () => {
-        //neavand alt fel de utilizatori decat admin, imi permit sa verific daca e logat doar TODO: sa schimbam conditia
+    const getActions = (item) => {
+        //neavand alt fel de utilizatori decat admin, imi permit sa verific doar daca e logat TODO: sa schimbam conditia
         if (props.logInStatusReducer.loggedIn) {
-            return [<ClickableStyle>EDIT</ClickableStyle>]
+            return [<ClickableStyle onClick={handleEdit(item)}>EDIT</ClickableStyle>]
         }
 
         return [];
     };
 
     const handleAddResearch = () => {
-        props.history.push("/editResearch");
+        props.formExistsAction(false);
+        props.history.push("/editResearch", {
+            research: undefined
+        });
     };
 
-    const handleItemClick = () => {
-        props.history.push("/fillResearch")
+    const handleEdit = (item) => () => {
+        props.formExistsAction(true);
+        props.history.push("/editResearch", {
+            research: item
+        });
+    };
+
+    const handleItemClick = (item) => () => {
+        props.history.push("/fillResearch", {
+            research: item
+        });
     };
 
     return (
@@ -81,10 +96,10 @@ const Research = (props) => {
                 dataSource={researches}
 
                 renderItem={item => (
-                    <List.Item actions={getActions()}>
+                    <List.Item actions={getActions(item)}>
                         <List.Item.Meta
                             avatar={<Avatar src={getFlagPath(item.language)}/>}
-                            title={<ClickableStyle onClick={handleItemClick}> {item.title} </ClickableStyle>}
+                            title={<ClickableStyle onClick={handleItemClick(item)}> {item.title} </ClickableStyle>}
                             description={item.shortDesc}
                         />
                     </List.Item>

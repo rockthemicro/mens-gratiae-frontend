@@ -15,7 +15,10 @@ const initialState = {
     },
     editQuestionReducer: {
         visible: false
-    }
+    },
+    editResearchAndTestFormReducer: {
+        form_exists: true
+    },
 };
 
 ReactDOM.render(
