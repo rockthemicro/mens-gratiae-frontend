@@ -77,7 +77,7 @@ const EditResearchForm = (props) => {
     };
 
     const handleEditQuestion = (item) => () => {
-        setEditedQuestion({...item, msg: item.question});
+        setEditedQuestion({...item});
         props.editQuestionVisible();
     };
 
