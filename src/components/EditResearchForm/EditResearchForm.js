@@ -69,7 +69,15 @@ const EditResearchForm = (props) => {
 
     const [tests, setTests] = useState(initialTests);
 
+    const [editedQuestion, setEditedQuestion] = useState({});
+
     const handleAddQuestion = () => {
+        setEditedQuestion({});
+        props.editQuestionVisible();
+    };
+
+    const handleEditQuestion = (item) => () => {
+        setEditedQuestion({...item, msg: item.question});
         props.editQuestionVisible();
     };
 
@@ -224,7 +232,7 @@ const EditResearchForm = (props) => {
                         onCancel={props.editQuestionInvisible}
                         footer={null}
                     >
-                        <EditQuestionForm/>
+                        <EditQuestionForm question={editedQuestion}/>
                     </Modal>
 
                     <Form.Item
@@ -243,7 +251,7 @@ const EditResearchForm = (props) => {
                                 <List.Item
                                     style={{padding: '16px 0'}}
                                     actions={[
-                                        <ClickableStyle>Edit</ClickableStyle>,
+                                        <ClickableStyle onClick={handleEditQuestion(item)}>Edit</ClickableStyle>,
                                         <ClickableStyle>Delete</ClickableStyle>,
                                         <ClickableStyle><UpOutlined /></ClickableStyle>,
                                         <ClickableStyle><DownOutlined /></ClickableStyle>,

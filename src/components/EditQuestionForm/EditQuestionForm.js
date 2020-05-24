@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Form, Input, Select} from "antd";
 import {compose} from "redux";
 import {withRouter} from "react-router-dom";
@@ -24,19 +24,68 @@ const EditQuestionForm = (props) => {
 
     const [form] = Form.useForm();
 
-    const onFinish = (values) => {
-        console.log(values);
+    const [extraFields, setExtraFields] = useState([]);
+
+    const initiateFormWithProps = () => {
+        form.setFieldsValue({
+            question: props.question.question,
+            type: props.question.type
+        });
+
+        let extraFields = [];
+        let answerFields = {};
+
+        if (
+            !isNaN(props.question.numberOfOptions) &&
+            props.question.numberOfOptions !== 0
+        ) {
+            extraFields.push({
+                fieldType: "quantitySelector",
+                questionType: props.question.type
+            });
+
+            for (let i = 0; i < props.question.numberOfOptions; i++) {
+                extraFields.push({
+                    fieldType: "answerField",
+                    answerName: "answerField" + i.toString(),
+                    answerIndex: i,
+                });
+
+                answerFields["answerField" + i.toString()] = props.question.options[i];
+            }
+        }
+
+        /*
+        generate the (empty) fields representing the question's number of
+        possible answers and the answer fields
+         */
+        setExtraFields(extraFields);
+
+        /* fill the fields generated above with setExtraFields */
+        form.setFieldsValue({
+            quantitySelector: props.question.numberOfOptions,
+            ...answerFields
+        });
+    };
+
+    useEffect(() => {
         setExtraFields([]);
         form.resetFields();
+
+        initiateFormWithProps();
+    }, [props.question]);
+
+
+    const onFinish = (values) => {
         props.editQuestionInvisible();
     };
 
     const onReset = () => {
         setExtraFields([]);
         form.resetFields();
-    };
 
-    const [extraFields, setExtraFields] = useState([]);
+        initiateFormWithProps();
+    };
 
     return (
         <Form
@@ -60,6 +109,7 @@ const EditQuestionForm = (props) => {
                     } else {
                         setExtraFields([]);
                     }
+
                 } else if (changedValues.hasOwnProperty("quantitySelector")) {
                     let quantity = changedValues["quantitySelector"];
 
