@@ -1,7 +1,7 @@
 import {compose} from "redux";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import 'antd/dist/antd.css';
 import {Button, Form, Input, List, Modal, Select} from "antd";
 import styled from "styled-components";
@@ -10,8 +10,9 @@ import DownOutlined from "@ant-design/icons/lib/icons/DownOutlined";
 import EditQuestionForm from "../EditQuestionForm";
 import editQuestionVisibleAction from "../../actions/editQuestionVisibleAction";
 import editQuestionInvisibleAction from "../../actions/editQuestionInvisibleAction";
-import {QTYPE_RANGE, QTYPE_SINGLE_CHOICE, QTYPE_YES_NO} from "../constants";
 import formExistsAction from "../../actions/formExistsAction";
+import endpoints from "../endpoints";
+import axios from 'axios';
 
 const mapStateToProps = state => ({
     editQuestionReducer: state.editQuestionReducer,
@@ -50,34 +51,23 @@ const EditResearchForm = (props) => {
 
     };
 
-    const detailsQuestions = [
+    const initialGenericQuestions = [
         {
-            title: 'Question1',
-            question: 'Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question',
-            type: QTYPE_RANGE,
+            question: 'Placeholder question',
         },
+
+    ];
+
+    const [genericQuestions, setGenericQuestions] = useState(initialGenericQuestions);
+
+    const initialTests = [
         {
-            title: 'Question2',
-            question: 'Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question',
-            type: QTYPE_YES_NO,
-        },
-        {
-            title: 'Question3',
-            question: 'Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question',
-            type: QTYPE_SINGLE_CHOICE,
+            name: 'test1',
+            description: 'Placeholder test',
         },
     ];
 
-    const tests = [
-        {
-            title: 'test1',
-            description: 'first test',
-        },
-        {
-            title: 'test2',
-            description: 'second test',
-        },
-    ];
+    const [tests, setTests] = useState(initialTests);
 
     const handleAddQuestion = () => {
         props.editQuestionVisible();
@@ -87,6 +77,7 @@ const EditResearchForm = (props) => {
         props.history.push("/editTest");
     };
 
+    /* populate research data */
     useEffect(() => {
         const research = props.location.state.research;
 
@@ -99,6 +90,41 @@ const EditResearchForm = (props) => {
             });
         }
     }, [props.location.state.research]);
+
+    /* populate research generic questions and tests */
+    useEffect(() => {
+        const research = props.location.state.research;
+
+        if (props.editResearchAndTestFormReducer.form_exists) {
+            axios.get(endpoints.GET_RESEARCH + '/' + research.id.toString())
+                .then(response => {
+                    if (response.data.status === 'OK') {
+                        setGenericQuestions(response.data.genericResearchQuestions);
+                    } else {
+                        alert('Something went wrong while loading research questions');
+                    }
+                })
+                .catch(err => {
+                    alert('Something went wrong while loading research questions');
+                });
+
+            axios.get(endpoints.GET_TESTS + '/' + research.id.toString())
+                .then(response => {
+                    if (response.data.status === 'OK') {
+                        setTests(response.data.tests)
+                    } else {
+                        alert('Something went wrong while loading tests');
+                    }
+                })
+                .catch(err => {
+                    alert('Something went wrong while loading tests');
+                });
+        }
+
+    }, [
+        props.editResearchAndTestFormReducer.form_exists,
+        props.location.state.research
+    ]);
 
     return (
         <div>
@@ -202,6 +228,7 @@ const EditResearchForm = (props) => {
                     </Modal>
 
                     <Form.Item
+                        name="question_list"
                         wrapperCol={{
                             span: 8,
                             offset: 8,
@@ -210,9 +237,9 @@ const EditResearchForm = (props) => {
                         <List
                             itemLayout='horizontal'
                             size='large'
-                            dataSource={detailsQuestions}
+                            dataSource={genericQuestions}
 
-                            renderItem={item => (
+                            renderItem={(item, id) => (
                                 <List.Item
                                     style={{padding: '16px 0'}}
                                     actions={[
@@ -224,7 +251,7 @@ const EditResearchForm = (props) => {
                                 >
 
                                     <List.Item.Meta
-                                        title={item.title}
+                                        title={'Question' + (id + 1).toString()}
                                         description={item.question}
                                     />
                                     Type: {item.type}
@@ -258,6 +285,7 @@ const EditResearchForm = (props) => {
                     </Form.Item>
 
                     <Form.Item
+                        name="test_list"
                         wrapperCol={{
                             span: 8,
                             offset: 8,
@@ -280,7 +308,7 @@ const EditResearchForm = (props) => {
                                 >
 
                                     <List.Item.Meta
-                                        title={item.title}
+                                        title={item.name}
                                         description={item.description}
                                     />
                                 </List.Item>
