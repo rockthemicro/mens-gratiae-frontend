@@ -10,6 +10,8 @@ import DownOutlined from "@ant-design/icons/lib/icons/DownOutlined";
 import styled from "styled-components";
 import EditTestQuestionForm from "../EditTestQuestionForm";
 import testFormExistsAction from "../../actions/testFormExistsAction";
+import axios from 'axios';
+import endpoints from "../endpoints";
 
 const mapStateToProps = state => ({
     editQuestionReducer: state.editQuestionReducer,
@@ -49,6 +51,14 @@ const EditTestForm = (props) => {
     const [form] = Form.useForm();
     const [extraFields, setExtraFields] = useState([]);
 
+    const initialQuestions = [
+        {
+            question: 'Placeholder of question Body',
+        },
+    ];
+
+    const [questions, setQuestions] = useState(initialQuestions);
+
     useEffect(() => {
         setTimeout(() => {
             divRef.current.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' });
@@ -83,25 +93,30 @@ const EditTestForm = (props) => {
                 setExtraFields(newExtraFields);
                 form.setFieldsValue({...answerFields});
             }
+
+            axios.get(endpoints.GET_TEST + '/' + test.id)
+                .then((response) => {
+                    if (response.data.status === 'OK') {
+                        setQuestions(response.data.rangeTestQuestions);
+                    } else {
+                        alert('Something went wrong while loading test questions');
+                    }
+                })
+                .catch(() => {
+                    alert('Something went wrong while loading test questions');
+                });
         }
     }, [props.location.state.test]);
 
-    const questions = [
-        {
-            title: 'Question1',
-            question: 'Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question',
-        },
-        {
-            title: 'Question2',
-            question: 'Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question',
-        },
-        {
-            title: 'Question3',
-            question: 'Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question',
-        },
-    ];
+    const [editedQuestion, setEditedQuestion] = useState({});
 
     const handleAddQuestion = () => {
+        setEditedQuestion({});
+        props.editQuestionVisible();
+    };
+
+    const handleEditQuestion = (item) => () => {
+        setEditedQuestion(item);
         props.editQuestionVisible();
     };
 
@@ -236,7 +251,7 @@ const EditTestForm = (props) => {
                         onCancel={props.editQuestionInvisible}
                         footer={null}
                     >
-                        <EditTestQuestionForm/>
+                        <EditTestQuestionForm question={editedQuestion}/>
                     </Modal>
 
                     <Form.Item
@@ -250,11 +265,13 @@ const EditTestForm = (props) => {
                             size='large'
                             dataSource={questions}
 
-                            renderItem={item => (
+                            renderItem={(item, index) => (
                                 <List.Item
                                     style={{padding: '16px 0'}}
                                     actions={[
-                                        <ClickableStyle>Edit</ClickableStyle>,
+                                        <ClickableStyle onClick={handleEditQuestion(item)}>
+                                            Edit
+                                        </ClickableStyle>,
                                         <ClickableStyle>Delete</ClickableStyle>,
                                         <ClickableStyle><UpOutlined /></ClickableStyle>,
                                         <ClickableStyle><DownOutlined /></ClickableStyle>,
@@ -262,7 +279,7 @@ const EditTestForm = (props) => {
                                 >
 
                                     <List.Item.Meta
-                                        title={item.title}
+                                        title={"Question " + (index + 1).toString()}
                                         description={item.question}
                                     />
                                 </List.Item>
