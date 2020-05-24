@@ -13,6 +13,7 @@ import editQuestionInvisibleAction from "../../actions/editQuestionInvisibleActi
 import formExistsAction from "../../actions/formExistsAction";
 import endpoints from "../endpoints";
 import axios from 'axios';
+import testFormExistsAction from "../../actions/testFormExistsAction";
 
 const mapStateToProps = state => ({
     editQuestionReducer: state.editQuestionReducer,
@@ -23,6 +24,7 @@ const mapDispatchToProps = dispatch => ({
     editQuestionVisible: () => dispatch(editQuestionVisibleAction()),
     editQuestionInvisible: () => dispatch(editQuestionInvisibleAction()),
     formExistsAction: (form_exists) => dispatch(formExistsAction(form_exists)),
+    testFormExistsAction: (form_exists) => dispatch(testFormExistsAction(form_exists)),
 });
 
 const formItemLayout = {
@@ -82,12 +84,14 @@ const EditResearchForm = (props) => {
     };
 
     const handleAddTest = () => {
+        props.testFormExistsAction(false);
         props.history.push("/editTest", {
             test: undefined
         });
     };
 
     const handleEditTest = (item) => () => {
+        props.testFormExistsAction(true);
         props.history.push("/editTest", {
             test: item
         });

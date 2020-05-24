@@ -19,6 +19,9 @@ const initialState = {
     editResearchFormReducer: {
         form_exists: true
     },
+    editTestFormReducer: {
+        test_form_exists: true
+    }
 };
 
 ReactDOM.render(
