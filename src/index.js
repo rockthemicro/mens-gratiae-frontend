@@ -16,7 +16,7 @@ const initialState = {
     editQuestionReducer: {
         visible: false
     },
-    editResearchAndTestFormReducer: {
+    editResearchFormReducer: {
         form_exists: true
     },
 };

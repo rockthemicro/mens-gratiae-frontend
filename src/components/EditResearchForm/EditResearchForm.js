@@ -16,7 +16,7 @@ import axios from 'axios';
 
 const mapStateToProps = state => ({
     editQuestionReducer: state.editQuestionReducer,
-    editResearchAndTestFormReducer: state.editResearchAndTestFormReducer,
+    editResearchFormReducer: state.editResearchFormReducer,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -103,7 +103,7 @@ const EditResearchForm = (props) => {
     useEffect(() => {
         const research = props.location.state.research;
 
-        if (props.editResearchAndTestFormReducer.form_exists) {
+        if (props.editResearchFormReducer.form_exists) {
             axios.get(endpoints.GET_RESEARCH + '/' + research.id.toString())
                 .then(response => {
                     if (response.data.status === 'OK') {
@@ -130,7 +130,7 @@ const EditResearchForm = (props) => {
         }
 
     }, [
-        props.editResearchAndTestFormReducer.form_exists,
+        props.editResearchFormReducer.form_exists,
         props.location.state.research
     ]);
 
@@ -199,7 +199,7 @@ const EditResearchForm = (props) => {
                 </Form.Item>
 
                 <div
-                    hidden={!props.editResearchAndTestFormReducer.form_exists}
+                    hidden={!props.editResearchFormReducer.form_exists}
                 >
 
                     <Form.Item

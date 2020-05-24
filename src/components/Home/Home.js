@@ -18,13 +18,7 @@ const Home = (props) => {
 
     return (
         <div>
-
-            <button onClick={action}>blabla</button>
-            <pre>
-                {
-                    JSON.stringify(props)
-                }
-            </pre>
+            Home
         </div>
     );
 };
