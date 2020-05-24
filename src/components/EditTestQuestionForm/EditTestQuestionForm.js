@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect} from "react";
 import {compose} from "redux";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
@@ -16,45 +16,33 @@ const mapDispatchToProps = dispatch => ({
 const EditTestQuestionForm = (props) => {
     const [form] = Form.useForm();
 
-    const onFinish = (values) => {
-        console.log(values);
-        setExtraFields([]);
+    const initiateFormWithProps = () => {
+        form.setFieldsValue({
+            question: props.question.question,
+        });
+    };
+
+    useEffect(() => {
         form.resetFields();
+
+        initiateFormWithProps();
+    }, [props.question]);
+
+    const onFinish = (values) => {
         props.editQuestionInvisible();
     };
 
     const onReset = () => {
-        setExtraFields([]);
         form.resetFields();
-    };
 
-    const [extraFields, setExtraFields] = useState([]);
+        initiateFormWithProps();
+    };
 
     return (
         <Form
             form={form}
             onFinish={onFinish}
             name="edit_test_question_form"
-            onValuesChange={(changedValues, allValues) => {
-                if (changedValues.hasOwnProperty("quantitySelector")) {
-                    let quantity = changedValues["quantitySelector"];
-
-                    if (isNaN(quantity) === false) {
-                        let answerFields = [];
-                        quantity = parseInt(quantity);
-
-                        for (let i = 0; i < quantity; i++) {
-                            answerFields.push({
-                                fieldType: "answerField",
-                                answerName: "answerField" + i.toString(),
-                                answerIndex: i,
-                            });
-                        }
-
-                        setExtraFields(answerFields);
-                    }
-                }
-            }}
         >
             <Form.Item>
                 Write A Question
@@ -71,45 +59,6 @@ const EditTestQuestionForm = (props) => {
             >
                 <Input.TextArea rows={4}/>
             </Form.Item>
-
-            <Form.Item
-                name="quantitySelector"
-                rules={[
-                    {
-                        required: true,
-                        message: "Please add how many options you want to have",
-                    }
-                ]}
-            >
-                <Input.TextArea
-                    rows={1}
-                    placeholder={"Number of options"}
-                />
-            </Form.Item>
-
-            {extraFields.map((extraField, index) => {
-                if (extraField.fieldType === "answerField") {
-                    return (
-                        <Form.Item
-                            name={extraField.answerName}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please fill this field",
-                                }
-                            ]}
-                            key={index.toString()}
-                        >
-                            <Input.TextArea
-                                rows={1}
-                                placeholder={"Option number "
-                                + (extraField.answerIndex + 1).toString()}
-                            />
-                        </Form.Item>
-                    );
-                }
-                return (<div></div>);
-            })}
 
             <Form.Item>
                 <Button type="primary" htmlType="submit">

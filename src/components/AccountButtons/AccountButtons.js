@@ -41,6 +41,7 @@ const AccountButtons = (props) => {
                     <div
                         style={{cursor: 'pointer', width:'50%',float:"right",color:"white"}}
                         onClick={handleRegister}
+                        hidden={true}
                     >
                         Register
                     </div>

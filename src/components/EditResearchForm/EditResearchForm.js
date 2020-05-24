@@ -1,7 +1,7 @@
 import {compose} from "redux";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import 'antd/dist/antd.css';
 import {Button, Form, Input, List, Modal, Select} from "antd";
 import styled from "styled-components";
@@ -10,15 +10,21 @@ import DownOutlined from "@ant-design/icons/lib/icons/DownOutlined";
 import EditQuestionForm from "../EditQuestionForm";
 import editQuestionVisibleAction from "../../actions/editQuestionVisibleAction";
 import editQuestionInvisibleAction from "../../actions/editQuestionInvisibleAction";
-import {QTYPE_RANGE, QTYPE_SINGLE_CHOICE, QTYPE_YES_NO} from "../constants";
+import formExistsAction from "../../actions/formExistsAction";
+import endpoints from "../endpoints";
+import axios from 'axios';
+import testFormExistsAction from "../../actions/testFormExistsAction";
 
 const mapStateToProps = state => ({
     editQuestionReducer: state.editQuestionReducer,
+    editResearchFormReducer: state.editResearchFormReducer,
 });
 
 const mapDispatchToProps = dispatch => ({
     editQuestionVisible: () => dispatch(editQuestionVisibleAction()),
-    editQuestionInvisible: () => dispatch(editQuestionInvisibleAction())
+    editQuestionInvisible: () => dispatch(editQuestionInvisibleAction()),
+    formExistsAction: (form_exists) => dispatch(formExistsAction(form_exists)),
+    testFormExistsAction: (form_exists) => dispatch(testFormExistsAction(form_exists)),
 });
 
 const formItemLayout = {
@@ -41,50 +47,109 @@ const ClickableStyle = styled.div`
 
 const EditResearchForm = (props) => {
 
+    const [form] = Form.useForm();
+
     const onFinish = (values) => {
 
     };
 
-    const detailsQuestions = [
+    const initialGenericQuestions = [
         {
-            title: 'Question1',
-            question: 'Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question',
-            type: QTYPE_RANGE,
+            question: 'Placeholder question',
         },
+
+    ];
+
+    const [genericQuestions, setGenericQuestions] = useState(initialGenericQuestions);
+
+    const initialTests = [
         {
-            title: 'Question2',
-            question: 'Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question',
-            type: QTYPE_YES_NO,
-        },
-        {
-            title: 'Question3',
-            question: 'Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question Description of first question',
-            type: QTYPE_SINGLE_CHOICE,
+            name: 'test1',
+            description: 'Placeholder test',
         },
     ];
 
-    const tests = [
-        {
-            title: 'test1',
-            description: 'first test',
-        },
-        {
-            title: 'test2',
-            description: 'second test',
-        },
-    ];
+    const [tests, setTests] = useState(initialTests);
+
+    const [editedQuestion, setEditedQuestion] = useState({});
 
     const handleAddQuestion = () => {
+        setEditedQuestion({});
+        props.editQuestionVisible();
+    };
+
+    const handleEditQuestion = (item) => () => {
+        setEditedQuestion(item);
         props.editQuestionVisible();
     };
 
     const handleAddTest = () => {
-        props.history.push("/editTest");
+        props.testFormExistsAction(false);
+        props.history.push("/editTest", {
+            test: undefined
+        });
     };
+
+    const handleEditTest = (item) => () => {
+        props.testFormExistsAction(true);
+        props.history.push("/editTest", {
+            test: item
+        });
+    };
+
+    /* populate research data */
+    useEffect(() => {
+        const research = props.location.state.research;
+
+        if (research !== undefined) {
+            form.setFieldsValue({
+                title: research.title,
+                short_desc: research.shortDesc,
+                full_desc: research.fullDesc,
+                language: research.language,
+            });
+        }
+    }, [props.location.state.research]);
+
+    /* populate research generic questions and tests */
+    useEffect(() => {
+        const research = props.location.state.research;
+
+        if (props.editResearchFormReducer.form_exists) {
+            axios.get(endpoints.GET_RESEARCH + '/' + research.id.toString())
+                .then(response => {
+                    if (response.data.status === 'OK') {
+                        setGenericQuestions(response.data.genericResearchQuestions);
+                    } else {
+                        alert('Something went wrong while loading research questions');
+                    }
+                })
+                .catch(err => {
+                    alert('Something went wrong while loading research questions');
+                });
+
+            axios.get(endpoints.GET_TESTS + '/' + research.id.toString())
+                .then(response => {
+                    if (response.data.status === 'OK') {
+                        setTests(response.data.tests)
+                    } else {
+                        alert('Something went wrong while loading tests');
+                    }
+                })
+                .catch(err => {
+                    alert('Something went wrong while loading tests');
+                });
+        }
+
+    }, [
+        props.editResearchFormReducer.form_exists,
+        props.location.state.research
+    ]);
 
     return (
         <div>
             <Form
+                form={form}
                 name="research_form"
                 {...formItemLayout}
                 onFinish={onFinish}
@@ -138,132 +203,142 @@ const EditResearchForm = (props) => {
                     }}
                 >
                     <Select>
-                        <Select.Option value="eng">English</Select.Option>
-                        <Select.Option value="ita">Italian</Select.Option>
-                        <Select.Option value="rom">Romanian</Select.Option>
+                        <Select.Option value="ENG">English</Select.Option>
+                        <Select.Option value="ITA">Italian</Select.Option>
+                        <Select.Option value="ROM">Romanian</Select.Option>
                     </Select>
 
                 </Form.Item>
 
-                <Form.Item
-                    wrapperCol={{
-                        span: 8,
-                        offset: 8,
-                    }}
-                    style={{
-                        margin: '50px 0 0',
-                        fontSize: '20px',
-                    }}
+                <div
+                    hidden={!props.editResearchFormReducer.form_exists}
                 >
-                    Questions for finding out more details about who will participate in the research
-                </Form.Item>
 
-                <Form.Item
-                    wrapperCol={{
-                        offset: 8,
-                    }}
-                    name="add_question_button"
-                >
-                    <Button type="default" onClick={handleAddQuestion}>
-                        Add Question
-                    </Button>
-                </Form.Item>
+                    <Form.Item
+                        wrapperCol={{
+                            span: 8,
+                            offset: 8,
+                        }}
+                        style={{
+                            margin: '50px 0 0',
+                            fontSize: '20px',
+                        }}
+                    >
+                        Questions for finding out more details about who will participate in the research
+                    </Form.Item>
 
-                <Modal
-                    title="Add Question"
-                    visible={props.editQuestionReducer.visible}
-                    onCancel={props.editQuestionInvisible}
-                    footer={null}
-                >
-                    <EditQuestionForm/>
-                </Modal>
+                    <Form.Item
+                        wrapperCol={{
+                            offset: 8,
+                        }}
+                        name="add_question_button"
+                    >
+                        <Button type="default" onClick={handleAddQuestion}>
+                            Add Question
+                        </Button>
+                    </Form.Item>
 
-                <Form.Item
-                    wrapperCol={{
-                        span: 8,
-                        offset: 8,
-                    }}
-                >
-                    <List
-                        itemLayout='horizontal'
-                        size='large'
-                        dataSource={detailsQuestions}
+                    <Modal
+                        title="Add Question"
+                        visible={props.editQuestionReducer.visible}
+                        onCancel={props.editQuestionInvisible}
+                        footer={null}
+                    >
+                        <EditQuestionForm question={editedQuestion}/>
+                    </Modal>
 
-                        renderItem={item => (
-                            <List.Item
-                                style={{padding: '16px 0'}}
-                                actions={[
-                                    <ClickableStyle>Edit</ClickableStyle>,
-                                    <ClickableStyle>Delete</ClickableStyle>,
-                                    <ClickableStyle><UpOutlined /></ClickableStyle>,
-                                    <ClickableStyle><DownOutlined /></ClickableStyle>,
-                                ]}
-                            >
+                    <Form.Item
+                        name="question_list"
+                        wrapperCol={{
+                            span: 8,
+                            offset: 8,
+                        }}
+                    >
+                        <List
+                            itemLayout='horizontal'
+                            size='large'
+                            dataSource={genericQuestions}
 
-                                <List.Item.Meta
-                                    title={item.title}
-                                    description={item.question}
-                                />
-                                Type: {item.type}
-                            </List.Item>
-                        )}
-                    />
-                </Form.Item>
+                            renderItem={(item, id) => (
+                                <List.Item
+                                    style={{padding: '16px 0'}}
+                                    actions={[
+                                        <ClickableStyle onClick={handleEditQuestion(item)}>Edit</ClickableStyle>,
+                                        <ClickableStyle>Delete</ClickableStyle>,
+                                        <ClickableStyle><UpOutlined /></ClickableStyle>,
+                                        <ClickableStyle><DownOutlined /></ClickableStyle>,
+                                    ]}
+                                >
 
-                <Form.Item
-                    wrapperCol={{
-                        span: 8,
-                        offset: 8,
-                    }}
-                    style={{
-                        margin: '50px 0 0',
-                        fontSize: '20px',
-                    }}
-                >
-                    Tests to be included in this research
-                </Form.Item>
+                                    <List.Item.Meta
+                                        title={'Question' + (id + 1).toString()}
+                                        description={item.question}
+                                    />
+                                    Type: {item.type}
+                                </List.Item>
+                            )}
+                        />
+                    </Form.Item>
 
-                <Form.Item
-                    wrapperCol={{
-                        offset: 8,
-                    }}
-                    name="add_test_button"
-                >
-                    <Button type="default" onClick={handleAddTest}>
-                        Add Test
-                    </Button>
-                </Form.Item>
+                    <Form.Item
+                        wrapperCol={{
+                            span: 8,
+                            offset: 8,
+                        }}
+                        style={{
+                            margin: '50px 0 0',
+                            fontSize: '20px',
+                        }}
+                    >
+                        Tests to be included in this research
+                    </Form.Item>
 
-                <Form.Item
-                    wrapperCol={{
-                        span: 8,
-                        offset: 8,
-                    }}
-                >
-                    <List
-                        itemLayout='horizontal'
-                        size='large'
-                        dataSource={tests}
+                    <Form.Item
+                        wrapperCol={{
+                            offset: 8,
+                        }}
+                        name="add_test_button"
+                    >
+                        <Button type="default" onClick={handleAddTest}>
+                            Add Test
+                        </Button>
+                    </Form.Item>
 
-                        renderItem={item => (
-                            <List.Item
-                                style={{padding: '16px 0'}}
-                                actions={[
-                                    <ClickableStyle>Edit</ClickableStyle>,
-                                    <ClickableStyle>Delete</ClickableStyle>,
-                                    <ClickableStyle><UpOutlined /></ClickableStyle>,
-                                    <ClickableStyle><DownOutlined /></ClickableStyle>,
-                                ]}
-                            >
+                    <Form.Item
+                        name="test_list"
+                        wrapperCol={{
+                            span: 8,
+                            offset: 8,
+                        }}
+                    >
+                        <List
+                            itemLayout='horizontal'
+                            size='large'
+                            dataSource={tests}
 
-                                <List.Item.Meta
-                                    title={item.title}
-                                    description={item.description}
-                                />
-                            </List.Item>
-                        )}
-                    />
-                </Form.Item>
+                            renderItem={item => (
+                                <List.Item
+                                    style={{padding: '16px 0'}}
+                                    actions={[
+                                        <ClickableStyle onClick={handleEditTest(item)}>
+                                            Edit
+                                        </ClickableStyle>,
+                                        <ClickableStyle>Delete</ClickableStyle>,
+                                        <ClickableStyle><UpOutlined /></ClickableStyle>,
+                                        <ClickableStyle><DownOutlined /></ClickableStyle>,
+                                    ]}
+                                >
+
+                                    <List.Item.Meta
+                                        title={item.name}
+                                        description={item.description}
+                                    />
+                                </List.Item>
+                            )}
+                        />
+                    </Form.Item>
+
+                </div>
 
                 <Form.Item
                     wrapperCol={{

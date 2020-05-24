@@ -12,19 +12,9 @@ const mapDispatchToProps = dispatch => ({
 
 const Home = (props) => {
 
-    const action = (event) => {
-        props.simpleAction();
-    };
-
     return (
         <div>
-
-            <button onClick={action}>blabla</button>
-            <pre>
-                {
-                    JSON.stringify(props)
-                }
-            </pre>
+            Home
         </div>
     );
 };
