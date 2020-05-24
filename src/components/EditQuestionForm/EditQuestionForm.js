@@ -32,20 +32,20 @@ const EditQuestionForm = (props) => {
             type: props.question.type
         });
 
-        let extraFields = [];
+        let newExtraFields = [];
         let answerFields = {};
 
         if (
             !isNaN(props.question.numberOfOptions) &&
             props.question.numberOfOptions !== 0
         ) {
-            extraFields.push({
+            newExtraFields.push({
                 fieldType: "quantitySelector",
                 questionType: props.question.type
             });
 
             for (let i = 0; i < props.question.numberOfOptions; i++) {
-                extraFields.push({
+                newExtraFields.push({
                     fieldType: "answerField",
                     answerName: "answerField" + i.toString(),
                     answerIndex: i,
@@ -59,7 +59,7 @@ const EditQuestionForm = (props) => {
         generate the (empty) fields representing the question's number of
         possible answers and the answer fields
          */
-        setExtraFields(extraFields);
+        setExtraFields(newExtraFields);
 
         /* fill the fields generated above with setExtraFields */
         form.setFieldsValue({

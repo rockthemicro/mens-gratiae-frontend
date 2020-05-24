@@ -12,10 +12,6 @@ const mapDispatchToProps = dispatch => ({
 
 const Home = (props) => {
 
-    const action = (event) => {
-        props.simpleAction();
-    };
-
     return (
         <div>
             Home

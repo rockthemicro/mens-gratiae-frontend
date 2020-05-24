@@ -77,12 +77,20 @@ const EditResearchForm = (props) => {
     };
 
     const handleEditQuestion = (item) => () => {
-        setEditedQuestion({...item});
+        setEditedQuestion(item);
         props.editQuestionVisible();
     };
 
     const handleAddTest = () => {
-        props.history.push("/editTest");
+        props.history.push("/editTest", {
+            test: undefined
+        });
+    };
+
+    const handleEditTest = (item) => () => {
+        props.history.push("/editTest", {
+            test: item
+        });
     };
 
     /* populate research data */
@@ -308,7 +316,9 @@ const EditResearchForm = (props) => {
                                 <List.Item
                                     style={{padding: '16px 0'}}
                                     actions={[
-                                        <ClickableStyle>Edit</ClickableStyle>,
+                                        <ClickableStyle onClick={handleEditTest(item)}>
+                                            Edit
+                                        </ClickableStyle>,
                                         <ClickableStyle>Delete</ClickableStyle>,
                                         <ClickableStyle><UpOutlined /></ClickableStyle>,
                                         <ClickableStyle><DownOutlined /></ClickableStyle>,

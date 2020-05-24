@@ -1,7 +1,7 @@
 import {compose} from "redux";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Form, Input, List, Modal} from "antd";
 import editQuestionVisibleAction from "../../actions/editQuestionVisibleAction";
 import editQuestionInvisibleAction from "../../actions/editQuestionInvisibleAction";
@@ -43,12 +43,45 @@ const EditTestForm = (props) => {
     };
 
     const divRef = React.useRef();
+    const [form] = Form.useForm();
+    const [extraFields, setExtraFields] = useState([]);
 
     useEffect(() => {
         setTimeout(() => {
             divRef.current.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' });
         }, 100);
     }, []);
+
+    useEffect(() => {
+        const test = props.location.state.test;
+
+        if (test !== undefined) {
+            form.setFieldsValue({
+                testName: test.name,
+                testDescription: test.description,
+                testScale: test.scale,
+            });
+
+            let newExtraFields = [];
+            let scale = test.scale;
+            let answerFields = {};
+
+            if (!isNaN(scale)) {
+                for (let i = 0; i < scale; i++) {
+                    newExtraFields.push({
+                        fieldType: "answerField",
+                        answerName: "answerField" + i.toString(),
+                        answerIndex: i,
+                    });
+
+                    answerFields["answerField" + i.toString()] = test.options[i];
+                }
+
+                setExtraFields(newExtraFields);
+                form.setFieldsValue({...answerFields});
+            }
+        }
+    }, [props.location.state.test]);
 
     const questions = [
         {
@@ -76,8 +109,27 @@ const EditTestForm = (props) => {
         >
             <Form
                 name="test_form"
+                form={form}
                 onFinish={onFinish}
                 {...formItemLayout}
+                onValuesChange={(changedValues, allValues) => {
+                    if (changedValues.hasOwnProperty("testScale")) {
+                        let newExtraFields = [];
+                        let scale = changedValues["testScale"];
+
+                        if (!isNaN(scale)) {
+                            for (let i = 0; i < scale; i++) {
+                                newExtraFields.push({
+                                    fieldType: "answerField",
+                                    answerName: "answerField" + i.toString(),
+                                    answerIndex: i,
+                                });
+                            }
+
+                            setExtraFields(newExtraFields);
+                        }
+                    }
+                }}
             >
 
                 <Form.Item
@@ -105,6 +157,48 @@ const EditTestForm = (props) => {
                 >
                     <Input.TextArea rows={4}/>
                 </Form.Item>
+
+                <Form.Item
+                    name="testScale"
+                    label="Test Scale"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please Enter a Scale",
+                        }
+                    ]}
+                >
+                    <Input.TextArea rows={1}/>
+                </Form.Item>
+
+                {extraFields.map((extraField, index) => {
+                    if (extraField.fieldType === "answerField") {
+                        return (
+                            <Form.Item
+                                wrapperCol={{
+                                    span: 8,
+                                    offset: 8,
+                                }}
+                                name={extraField.answerName}
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Please fill this field",
+                                    }
+                                ]}
+                                key={index.toString()}
+                            >
+                                <Input.TextArea
+                                    rows={1}
+                                    placeholder={"Option number "
+                                    + (extraField.answerIndex + 1).toString()}
+                                />
+                            </Form.Item>
+                        );
+                    } else {
+                        return (<div/>);
+                    }
+                })}
 
                 <Form.Item
                     wrapperCol={{

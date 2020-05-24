@@ -56,7 +56,7 @@ const Research = (props) => {
     const getActions = (item) => {
         //neavand alt fel de utilizatori decat admin, imi permit sa verific doar daca e logat TODO: sa schimbam conditia
         if (props.logInStatusReducer.loggedIn) {
-            return [<ClickableStyle onClick={handleEdit(item)}>EDIT</ClickableStyle>]
+            return [<ClickableStyle onClick={handleEditResearch(item)}>EDIT</ClickableStyle>]
         }
 
         return [];
@@ -69,7 +69,7 @@ const Research = (props) => {
         });
     };
 
-    const handleEdit = (item) => () => {
+    const handleEditResearch = (item) => () => {
         props.formExistsAction(true);
         props.history.push("/editResearch", {
             research: item
