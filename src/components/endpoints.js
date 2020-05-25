@@ -6,4 +6,7 @@ export default {
 
     GET_TESTS: HOST_NAME + '/tests',
     GET_TEST: HOST_NAME + '/tests/test',
+
+    CREATE_RESEARCH: HOST_NAME + '/researches/add',
+    UPDATE_RESEARCH: HOST_NAME + '/researches/update'
 };

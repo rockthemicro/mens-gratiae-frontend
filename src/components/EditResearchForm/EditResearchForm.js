@@ -49,8 +49,42 @@ const EditResearchForm = (props) => {
 
     const [form] = Form.useForm();
 
-    const onFinish = (values) => {
+    const createResearch = (values) => {
+        const postData = {
+            fullDesc: values.full_desc,
+            title: values.title,
+            shortDesc: values.short_desc,
+            language: values.language
+        };
+        axios.post(endpoints.CREATE_RESEARCH, postData)
+            .then((response) => {
+                debugger;
+                if (response.data.status === 'OK') {
+                    props.history.push("/editResearch", {
+                        research: {...values, id: response.data.researchId}
+                    });
+                    props.formExistsAction(true);
+                } else {
+                    debugger;
+                    alert('Something went wrong while creating research')
+                }
+            })
+            .catch(() => {
+                debugger;
+                alert('Something went wrong while creating research');
+            })
+    };
 
+    const updateResearch = (values) => {
+
+    };
+
+    const onFinish = (values) => {
+        if (props.editResearchFormReducer.form_exists) {
+            updateResearch(values);
+        } else {
+            createResearch(values);
+        }
     };
 
     const initialGenericQuestions = [
@@ -115,7 +149,7 @@ const EditResearchForm = (props) => {
     useEffect(() => {
         const research = props.location.state.research;
 
-        if (props.editResearchFormReducer.form_exists) {
+        if (research !== undefined) {
             axios.get(endpoints.GET_RESEARCH + '/' + research.id.toString())
                 .then(response => {
                     if (response.data.status === 'OK') {
@@ -142,7 +176,6 @@ const EditResearchForm = (props) => {
         }
 
     }, [
-        props.editResearchFormReducer.form_exists,
         props.location.state.research
     ]);
 
