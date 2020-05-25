@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Form, Input, Select} from "antd";
+import {Button, Form, Input, InputNumber, Select} from "antd";
 import {compose} from "redux";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
@@ -253,9 +253,10 @@ const EditQuestionForm = (props) => {
                             ]}
                             key={index.toString()}
                         >
-                            <Input.TextArea
-                                rows={1}
+                            <InputNumber
                                 placeholder={"Number of options"}
+                                min={0}
+                                style={{width: "100%"}}
                             />
                         </Form.Item>
                     );

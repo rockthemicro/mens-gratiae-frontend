@@ -2,7 +2,7 @@ import {compose} from "redux";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import React, {useEffect, useState} from "react";
-import {Button, Form, Input, List, Modal} from "antd";
+import {Button, Form, Input, InputNumber, List, Modal} from "antd";
 import editQuestionVisibleAction from "../../actions/editQuestionVisibleAction";
 import editQuestionInvisibleAction from "../../actions/editQuestionInvisibleAction";
 import UpOutlined from "@ant-design/icons/lib/icons/UpOutlined";
@@ -62,7 +62,7 @@ const EditTestForm = (props) => {
     const calculateOptions = values => {
         let options = [];
         for (let i = 0; i < values.testScale; i++) {
-            options.push(values["answerField"+i])
+            options.push(values["answerField" + i])
         }
 
         return options;
@@ -137,7 +137,7 @@ const EditTestForm = (props) => {
 
     useEffect(() => {
         setTimeout(() => {
-            divRef.current.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' });
+            divRef.current.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'start'});
         }, 100);
     }, []);
 
@@ -262,7 +262,9 @@ const EditTestForm = (props) => {
                         }
                     ]}
                 >
-                    <Input.TextArea rows={1}/>
+                    <InputNumber
+                        min={0}
+                    />
                 </Form.Item>
 
                 {extraFields.map((extraField, index) => {
@@ -349,8 +351,8 @@ const EditTestForm = (props) => {
                                             Edit
                                         </ClickableStyle>,
                                         <ClickableStyle>Delete</ClickableStyle>,
-                                        <ClickableStyle><UpOutlined /></ClickableStyle>,
-                                        <ClickableStyle><DownOutlined /></ClickableStyle>,
+                                        <ClickableStyle><UpOutlined/></ClickableStyle>,
+                                        <ClickableStyle><DownOutlined/></ClickableStyle>,
                                     ]}
                                 >
 
