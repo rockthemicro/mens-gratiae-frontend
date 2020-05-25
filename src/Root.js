@@ -14,6 +14,7 @@ import ResearchForm from "./components/ResearchForm";
 import EditResearchForm from "./components/EditResearchForm";
 import EditTestForm from "./components/EditTestForm";
 import TestForm from "./components/TestForm";
+import ResearchDescriptionPage from "./components/ResearchDescriptionPage";
 
 const {Header, Content, Footer} = Layout;
 
@@ -65,6 +66,7 @@ const Root = () => (
                         <Route exact path="/editResearch" component={EditResearchForm}/>
                         <Route exact path="/editTest" component={EditTestForm}/>
 
+                        <Route exact path="/researchDescription" component={ResearchDescriptionPage}/>
                         <Route exact path="/fillResearch" component={ResearchForm}/>
                         <Route exact path="/fillTest" component={TestForm}/>
                     </ContentDiv>

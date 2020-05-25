@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Form, Input, Select} from "antd";
+import {Button, Form, Input, InputNumber, Select} from "antd";
 import {compose} from "redux";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
@@ -11,6 +11,8 @@ import {
     QTYPE_YES_NO
 } from "../constants";
 import editQuestionInvisibleAction from "../../actions/editQuestionInvisibleAction";
+import endpoints from '../endpoints';
+import axios from 'axios';
 
 const mapStateToProps = state => ({
     editQuestionReducer: state.editQuestionReducer,
@@ -75,9 +77,74 @@ const EditQuestionForm = (props) => {
         initiateFormWithProps();
     }, [props.question]);
 
+    const calculateOptions = values => {
+        let options = [];
+        for (let i = 0; i < values.quantitySelector; i++) {
+            options.push(values['answerField'+i]);
+        }
+
+        return options;
+    };
+
+    const createQuestion = values => {
+        const data = {
+            question: values.question,
+            type: values.type,
+            researchId: props.research.id,
+            numberOfOptions: values.quantitySelector,
+            options: calculateOptions(values)
+        };
+
+        axios.post(endpoints.CREATE_GENERIC_RESEARCH_QUESTION, data)
+            .then((response) => {
+                if (response.data.status !== 'OK') {
+                    alert('Something went wrong while creating generic question');
+                }
+            })
+            .catch(() => {
+                alert('Something went wrong while creating generic question');
+            })
+            .finally(() => {
+                props.editQuestionInvisible();
+                props.history.push("/editResearch", {
+                    research: {...props.research}
+                });
+            })
+    };
+
+    const updateQuestion = values => {
+        const data = {
+            id: props.question.id,
+            question: values.question,
+            type: values.type,
+            researchId: props.research.id,
+            numberOfOptions: values.quantitySelector,
+            options: calculateOptions(values)
+        };
+
+        axios.put(endpoints.UPDATE_GENERIC_RESEARCH_QUESTION, data)
+            .then((response) => {
+                if (response.data.status !== 'OK') {
+                    alert('Something went wrong while updating generic question');
+                }
+            })
+            .catch(() => {
+                alert('Something went wrong while updating generic question');
+            })
+            .finally(() => {
+                props.editQuestionInvisible();
+                props.history.push("/editResearch", {
+                    research: {...props.research}
+                });
+            })
+    };
 
     const onFinish = (values) => {
-        props.editQuestionInvisible();
+        if (!props.question.id) {
+            createQuestion(values);
+        } else {
+            updateQuestion(values);
+        }
     };
 
     const onReset = () => {
@@ -97,7 +164,7 @@ const EditQuestionForm = (props) => {
                     let newType = changedValues["type"];
 
                     if (newType === QTYPE_RANGE ||
-                        newType === QTYPE_SINGLE_CHOICE  ||
+                        newType === QTYPE_SINGLE_CHOICE ||
                         newType === QTYPE_MULTIPLE_CHOICE) {
 
                         setExtraFields([
@@ -186,9 +253,10 @@ const EditQuestionForm = (props) => {
                             ]}
                             key={index.toString()}
                         >
-                            <Input.TextArea
-                                rows={1}
+                            <InputNumber
                                 placeholder={"Number of options"}
+                                min={0}
+                                style={{width: "100%"}}
                             />
                         </Form.Item>
                     );
@@ -208,7 +276,7 @@ const EditQuestionForm = (props) => {
                             <Input.TextArea
                                 rows={1}
                                 placeholder={"Option number "
-                                    + (extraField.answerIndex + 1).toString()}
+                                + (extraField.answerIndex + 1).toString()}
                             />
                         </Form.Item>
                     );

@@ -2,7 +2,7 @@ import {compose} from "redux";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import React, {useEffect, useState} from "react";
-import {Button, Form, Input, List, Modal} from "antd";
+import {Button, Form, Input, InputNumber, List, Modal} from "antd";
 import editQuestionVisibleAction from "../../actions/editQuestionVisibleAction";
 import editQuestionInvisibleAction from "../../actions/editQuestionInvisibleAction";
 import UpOutlined from "@ant-design/icons/lib/icons/UpOutlined";
@@ -43,9 +43,9 @@ const ClickableStyle = styled.div`
 `;
 
 const EditTestForm = (props) => {
-    const onFinish = (values) => {
 
-    };
+    const testProp = props.location.state.test;
+    const researchProp = props.location.state.research;
 
     const divRef = React.useRef();
     const [form] = Form.useForm();
@@ -59,9 +59,85 @@ const EditTestForm = (props) => {
 
     const [questions, setQuestions] = useState(initialQuestions);
 
+    const calculateOptions = values => {
+        let options = [];
+        for (let i = 0; i < values.testScale; i++) {
+            options.push(values["answerField" + i])
+        }
+
+        return options;
+    };
+
+    const createTest = values => {
+        console.log(values);
+        const data = {
+            researchId: researchProp.id,
+            description: values.testDescription,
+            name: values.testName,
+            scale: values.testScale,
+            options: calculateOptions(values)
+        };
+
+        axios.post(endpoints.CREATE_TEST, data)
+            .then((response) => {
+                if (response.data.status === 'OK') {
+                    props.history.push("/editTest", {
+                        test: {
+                            id: response.data.testId,
+                            name: values.testName,
+                            description: values.testDescription,
+                            scale: values.testScale,
+                            options: calculateOptions(values),
+                            researchId: researchProp.id
+                        },
+                        research: researchProp
+                    });
+                    props.testFormExistsAction(true);
+                } else {
+                    alert('Something went wrong while creating test')
+                }
+            })
+            .catch(() => {
+                alert('Something went wrong while creating test')
+            })
+    };
+
+    const updateTest = values => {
+        const data = {
+            researchId: researchProp.id,
+            description: values.testDescription,
+            name: values.testName,
+            scale: values.testScale,
+            id: testProp.id,
+            options: calculateOptions(values)
+        };
+
+        axios.put(endpoints.UPDATE_TEST, data)
+            .then((response) => {
+                if (response.data.status === 'OK') {
+                    props.history.push("/editResearch", {
+                        research: researchProp
+                    });
+                } else {
+                    alert('Something went wrong while updating test')
+                }
+            })
+            .catch(() => {
+                alert('Something went wrong while updating test')
+            })
+    };
+
+    const onFinish = (values) => {
+        if (testProp === undefined) {
+            createTest(values);
+        } else {
+            updateTest(values);
+        }
+    };
+
     useEffect(() => {
         setTimeout(() => {
-            divRef.current.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' });
+            divRef.current.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'start'});
         }, 100);
     }, []);
 
@@ -186,7 +262,9 @@ const EditTestForm = (props) => {
                         }
                     ]}
                 >
-                    <Input.TextArea rows={1}/>
+                    <InputNumber
+                        min={0}
+                    />
                 </Form.Item>
 
                 {extraFields.map((extraField, index) => {
@@ -251,7 +329,7 @@ const EditTestForm = (props) => {
                         onCancel={props.editQuestionInvisible}
                         footer={null}
                     >
-                        <EditTestQuestionForm question={editedQuestion}/>
+                        <EditTestQuestionForm question={editedQuestion} test={testProp} research={researchProp}/>
                     </Modal>
 
                     <Form.Item
@@ -273,8 +351,8 @@ const EditTestForm = (props) => {
                                             Edit
                                         </ClickableStyle>,
                                         <ClickableStyle>Delete</ClickableStyle>,
-                                        <ClickableStyle><UpOutlined /></ClickableStyle>,
-                                        <ClickableStyle><DownOutlined /></ClickableStyle>,
+                                        <ClickableStyle><UpOutlined/></ClickableStyle>,
+                                        <ClickableStyle><DownOutlined/></ClickableStyle>,
                                     ]}
                                 >
 

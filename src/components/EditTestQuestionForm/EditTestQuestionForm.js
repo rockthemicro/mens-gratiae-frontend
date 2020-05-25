@@ -4,6 +4,8 @@ import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import {Button, Form, Input} from "antd";
 import editQuestionInvisibleAction from "../../actions/editQuestionInvisibleAction";
+import axios from "axios";
+import endpoints from "../endpoints";
 
 const mapStateToProps = state => ({
     editQuestionReducer: state.editQuestionReducer,
@@ -28,8 +30,62 @@ const EditTestQuestionForm = (props) => {
         initiateFormWithProps();
     }, [props.question]);
 
+    const createQuestion = values => {
+        const data = {
+            testId: props.test.id,
+            question: values.question,
+        };
+
+        axios.post(endpoints.CREATE_TEST_QUESTION, data)
+            .then((response) => {
+                if (response.data.status !== 'OK') {
+                    alert('Something went wrong while creating question');
+                }
+            })
+            .catch(() => {
+                alert('Something went wrong while creating question')
+            })
+            .finally(() => {
+                props.editQuestionInvisible();
+                props.history.push("/editTest", {
+                    test: {...props.test},
+                    research: props.research
+                });
+            })
+
+    };
+
+    const updateQuestion = values => {
+        const data = {
+            testId: props.test.id,
+            question: values.question,
+            id: props.question.id
+        };
+
+        axios.put(endpoints.UPDATE_TEST_QUESTION, data)
+            .then((response) => {
+                if (response.data.status !== 'OK') {
+                    alert('Something went wrong while updating question');
+                }
+            })
+            .catch(() => {
+                alert('Something went wrong while updating question');
+            })
+            .finally(() => {
+                props.editQuestionInvisible();
+                props.history.push("/editTest", {
+                    test: {...props.test},
+                    research: props.research
+                });
+            })
+    };
+
     const onFinish = (values) => {
-        props.editQuestionInvisible();
+        if (!props.question.id) {
+            createQuestion(values);
+        } else {
+            updateQuestion(values);
+        }
     };
 
     const onReset = () => {

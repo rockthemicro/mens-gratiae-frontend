@@ -47,10 +47,65 @@ const ClickableStyle = styled.div`
 
 const EditResearchForm = (props) => {
 
+    const research = props.location.state.research;
     const [form] = Form.useForm();
 
-    const onFinish = (values) => {
+    const createResearch = (values) => {
+        const postData = {
+            fullDesc: values.full_desc,
+            title: values.title,
+            shortDesc: values.short_desc,
+            language: values.language
+        };
+        axios.post(endpoints.CREATE_RESEARCH, postData)
+            .then((response) => {
+                if (response.data.status === 'OK') {
+                    props.history.push("/editResearch", {
+                        research: {
+                            id: response.data.researchId,
+                            fullDesc: values.full_desc,
+                            shortDesc: values.short_desc,
+                            title: values.title,
+                            language: values.language
+                        }
+                    });
+                    props.formExistsAction(true);
+                } else {
+                    alert('Something went wrong while creating research')
+                }
+            })
+            .catch(() => {
+                alert('Something went wrong while creating research');
+            })
+    };
 
+    const updateResearch = (values) => {
+        const data = {
+            fullDesc: values.full_desc,
+            title: values.title,
+            shortDesc: values.short_desc,
+            language: values.language,
+            id: research.id
+        };
+        axios.put(endpoints.UPDATE_RESEARCH, data)
+            .then((response) => {
+                if (response.data.status === 'OK') {
+                    props.history.push("/research");
+                } else {
+                    alert('Something went wrong while updating research')
+                }
+            })
+            .catch(() => {
+                alert('Something went wrong while updating research');
+            })
+    };
+
+    const onFinish = (values) => {
+        if (props.editResearchFormReducer.form_exists) {
+            updateResearch(values);
+        } else {
+            createResearch(values);
+        }
     };
 
     const initialGenericQuestions = [
@@ -86,14 +141,16 @@ const EditResearchForm = (props) => {
     const handleAddTest = () => {
         props.testFormExistsAction(false);
         props.history.push("/editTest", {
-            test: undefined
+            test: undefined,
+            research: research
         });
     };
 
     const handleEditTest = (item) => () => {
         props.testFormExistsAction(true);
         props.history.push("/editTest", {
-            test: item
+            test: item,
+            research: research
         });
     };
 
@@ -115,7 +172,7 @@ const EditResearchForm = (props) => {
     useEffect(() => {
         const research = props.location.state.research;
 
-        if (props.editResearchFormReducer.form_exists) {
+        if (research !== undefined) {
             axios.get(endpoints.GET_RESEARCH + '/' + research.id.toString())
                 .then(response => {
                     if (response.data.status === 'OK') {
@@ -142,7 +199,6 @@ const EditResearchForm = (props) => {
         }
 
     }, [
-        props.editResearchFormReducer.form_exists,
         props.location.state.research
     ]);
 
@@ -244,7 +300,7 @@ const EditResearchForm = (props) => {
                         onCancel={props.editQuestionInvisible}
                         footer={null}
                     >
-                        <EditQuestionForm question={editedQuestion}/>
+                        <EditQuestionForm question={editedQuestion} research={research}/>
                     </Modal>
 
                     <Form.Item
@@ -265,8 +321,8 @@ const EditResearchForm = (props) => {
                                     actions={[
                                         <ClickableStyle onClick={handleEditQuestion(item)}>Edit</ClickableStyle>,
                                         <ClickableStyle>Delete</ClickableStyle>,
-                                        <ClickableStyle><UpOutlined /></ClickableStyle>,
-                                        <ClickableStyle><DownOutlined /></ClickableStyle>,
+                                        <ClickableStyle><UpOutlined/></ClickableStyle>,
+                                        <ClickableStyle><DownOutlined/></ClickableStyle>,
                                     ]}
                                 >
 
@@ -324,8 +380,8 @@ const EditResearchForm = (props) => {
                                             Edit
                                         </ClickableStyle>,
                                         <ClickableStyle>Delete</ClickableStyle>,
-                                        <ClickableStyle><UpOutlined /></ClickableStyle>,
-                                        <ClickableStyle><DownOutlined /></ClickableStyle>,
+                                        <ClickableStyle><UpOutlined/></ClickableStyle>,
+                                        <ClickableStyle><DownOutlined/></ClickableStyle>,
                                     ]}
                                 >
 

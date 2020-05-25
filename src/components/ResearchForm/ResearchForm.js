@@ -38,7 +38,7 @@ const ResearchForm = () => {
 
     const data = [
         {
-            type: "yes-no",
+            type: QTYPE_YES_NO,
             question: "Va place pizza?",
             required: true,
             requiredMessage: "Please select an answer",
@@ -46,7 +46,7 @@ const ResearchForm = () => {
             noText:"Nu",
         },
         {
-            type: "range",
+            type: QTYPE_RANGE,
             question: "Uneori cand sunt trist, ascult muzica",
             required: true,
             requiredMessage: "Va rugam, selectati un raspuns",
@@ -58,7 +58,7 @@ const ResearchForm = () => {
             },
         },
         {
-            type: "multipleChoice",
+            type: QTYPE_MULTIPLE_CHOICE,
             question: "Imi place saaa",
             answers: [
                 "The href attribute requires a valid value to be accessible. Provide a valid, navigable address as the href value. If you cannot provide a valid href, but still need the element to resemble a link, use a button and change it with appropriate styles.",
@@ -70,11 +70,11 @@ const ResearchForm = () => {
             ],
         },
         {
-            type: "text",
+            type: QTYPE_TEXT,
             question: "Ce parere aveti de Tudor Gheorghe?",
         },
         {
-            type: "singleChoice",
+            type: QTYPE_SINGLE_CHOICE,
             question: "Cand ati fost ultima oara la un concert?",
             required: true,
             answers: [
