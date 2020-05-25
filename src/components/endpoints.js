@@ -11,5 +11,8 @@ export default {
     UPDATE_RESEARCH: HOST_NAME + '/researches/update',
 
     CREATE_TEST: HOST_NAME + '/tests/add',
-    UPDATE_TEST: HOST_NAME + '/tests/update'
+    UPDATE_TEST: HOST_NAME + '/tests/update',
+
+    CREATE_GENERIC_RESEARCH_QUESTION: HOST_NAME + '/researches/genericResearchQuestions/add',
+    UPDATE_GENERIC_RESEARCH_QUESTION: HOST_NAME + '/researches/genericResearchQuestions/update'
 };

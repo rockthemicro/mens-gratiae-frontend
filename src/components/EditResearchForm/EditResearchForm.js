@@ -300,7 +300,7 @@ const EditResearchForm = (props) => {
                         onCancel={props.editQuestionInvisible}
                         footer={null}
                     >
-                        <EditQuestionForm question={editedQuestion}/>
+                        <EditQuestionForm question={editedQuestion} research={research}/>
                     </Modal>
 
                     <Form.Item
