@@ -141,14 +141,16 @@ const EditResearchForm = (props) => {
     const handleAddTest = () => {
         props.testFormExistsAction(false);
         props.history.push("/editTest", {
-            test: undefined
+            test: undefined,
+            research: research
         });
     };
 
     const handleEditTest = (item) => () => {
         props.testFormExistsAction(true);
         props.history.push("/editTest", {
-            test: item
+            test: item,
+            research: research
         });
     };
 

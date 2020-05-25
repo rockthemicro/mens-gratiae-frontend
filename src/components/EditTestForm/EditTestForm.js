@@ -43,9 +43,9 @@ const ClickableStyle = styled.div`
 `;
 
 const EditTestForm = (props) => {
-    const onFinish = (values) => {
 
-    };
+    const testProp = props.location.state.test;
+    const researchProp = props.location.state.research;
 
     const divRef = React.useRef();
     const [form] = Form.useForm();
@@ -58,6 +58,82 @@ const EditTestForm = (props) => {
     ];
 
     const [questions, setQuestions] = useState(initialQuestions);
+
+    const calculateOptions = values => {
+        let options = [];
+        for (let i = 0; i < values.testScale; i++) {
+            options.push(values["answerField"+i])
+        }
+
+        return options;
+    };
+
+    const createTest = values => {
+        console.log(values);
+        const data = {
+            researchId: researchProp.id,
+            description: values.testDescription,
+            name: values.testName,
+            scale: values.testScale,
+            options: calculateOptions(values)
+        };
+
+        axios.post(endpoints.CREATE_TEST, data)
+            .then((response) => {
+                if (response.data.status === 'OK') {
+                    props.history.push("/editTest", {
+                        test: {
+                            id: response.data.testId,
+                            name: values.testName,
+                            description: values.testDescription,
+                            scale: values.testScale,
+                            options: calculateOptions(values),
+                            researchId: researchProp.id
+                        },
+                        research: researchProp
+                    });
+                    props.testFormExistsAction(true);
+                } else {
+                    alert('Something went wrong while creating test')
+                }
+            })
+            .catch(() => {
+                alert('Something went wrong while creating test')
+            })
+    };
+
+    const updateTest = values => {
+        const data = {
+            researchId: researchProp.id,
+            description: values.testDescription,
+            name: values.testName,
+            scale: values.testScale,
+            id: testProp.id,
+            options: calculateOptions(values)
+        };
+
+        axios.put(endpoints.UPDATE_TEST, data)
+            .then((response) => {
+                if (response.data.status === 'OK') {
+                    props.history.push("/editResearch", {
+                        research: researchProp
+                    });
+                } else {
+                    alert('Something went wrong while updating test')
+                }
+            })
+            .catch(() => {
+                alert('Something went wrong while updating test')
+            })
+    };
+
+    const onFinish = (values) => {
+        if (testProp === undefined) {
+            createTest(values);
+        } else {
+            updateTest(values);
+        }
+    };
 
     useEffect(() => {
         setTimeout(() => {

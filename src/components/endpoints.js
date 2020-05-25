@@ -8,5 +8,8 @@ export default {
     GET_TEST: HOST_NAME + '/tests/test',
 
     CREATE_RESEARCH: HOST_NAME + '/researches/add',
-    UPDATE_RESEARCH: HOST_NAME + '/researches/update'
+    UPDATE_RESEARCH: HOST_NAME + '/researches/update',
+
+    CREATE_TEST: HOST_NAME + '/tests/add',
+    UPDATE_TEST: HOST_NAME + '/tests/update'
 };
