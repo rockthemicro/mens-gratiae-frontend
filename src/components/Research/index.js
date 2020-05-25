@@ -1,3 +1,3 @@
-import Tests from './Research';
+import Research from './Research';
 
-export default Tests;
+export default Research;

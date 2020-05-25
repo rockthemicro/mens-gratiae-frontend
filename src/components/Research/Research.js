@@ -77,7 +77,7 @@ const Research = (props) => {
     };
 
     const handleItemClick = (item) => () => {
-        props.history.push("/fillResearch", {
+        props.history.push("/researchDescription", {
             research: item
         });
     };
