@@ -327,7 +327,7 @@ const EditTestForm = (props) => {
                         onCancel={props.editQuestionInvisible}
                         footer={null}
                     >
-                        <EditTestQuestionForm question={editedQuestion}/>
+                        <EditTestQuestionForm question={editedQuestion} test={testProp} research={researchProp}/>
                     </Modal>
 
                     <Form.Item
