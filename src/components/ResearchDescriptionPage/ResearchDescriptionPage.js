@@ -3,9 +3,13 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import endpoints from "../endpoints";
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
 
-const mapDispatchToProps = dispatch => ({});
+});
+
+const mapDispatchToProps = dispatch => ({
+
+});
 
 const ResearchDescriptionPage = (props) => {
 
@@ -15,6 +19,9 @@ const ResearchDescriptionPage = (props) => {
         tests: [],
         testsQuestions: {}
     });
+
+    const testsQuestions = {};
+
     useEffect(() => {
         axios.get(endpoints.GET_RESEARCH + "/" + props.location.state.research.id)
             .then((response) => {
@@ -22,54 +29,49 @@ const ResearchDescriptionPage = (props) => {
                     setContext({
                         research: response.data.research,
                         questions: response.data.genericResearchQuestions,
-                        tests: response.data.tests
+                        tests: response.data.tests,
+                        testsQuestions: {}
                     });
                 } else {
-                    alert('Sorry, the information could not be completed');
+                    alert('Sorry, the research could not be retrieved');
                 }
             })
             .catch(() => {
-                alert('Sorry, the information could not be completed');
+                alert('Sorry, the research could not be retrieved');
             });
     }, []);
 
     useEffect(() => {
         if (context.tests.length > 0) {
-            context.tests.map((test) => {
+            for (let test of context.tests) {
                 axios.get(endpoints.GET_TEST + "/" + test.id)
                     .then((response) => {
                         if (response.data.status === 'OK') {
-                            // const newTestQuestions = {
-                            //     [test.id]: response.data.rangeTestQuestions
-                            // };
-debugger;
+                            testsQuestions[test.id] = response.data.rangeTestQuestions;
 
-                            let newContext = {
-                                ...context
-                            };
+                            if (Object.keys(testsQuestions).length === context.tests.length) {
+                                setContext({
+                                    ...context,
+                                    testsQuestions: testsQuestions
+                                });
+                            }
 
-                            let newTestQuestions = {
-                                ...context.testsQuestions
-                            };
-
-                            newTestQuestions[test.id] = response.data.rangeTestQuestions;
-
-                            newContext.testsQuestions = {
-                                ...newTestQuestions
-                            };
-
-                            setContext(newContext);
+                        } else {
+                            alert('Sorry, the questions could not be retrieved');
                         }
                     })
                     .catch(() => {
-
+                        alert('Sorry, the questions could not be retrieved');
                     })
-            });
+            }
         }
     }, [context.tests]);
 
+    function bla() {
+        debugger;
+    }
     return (
-        <div>{context.research.id}</div>
+        <div onClick={bla}>{context.research.id + "debugger"}</div>
     );
 };
 
