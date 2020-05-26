@@ -1,49 +1,112 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {compose} from "redux";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import {Button, Radio, Table} from "antd";
 
-const mapStateToProps = state => ({
-});
+const mapStateToProps = state => ({});
 
-const mapDispatchToProps = dispatch => ({
-});
+const mapDispatchToProps = dispatch => ({});
 
 const TestForm = (props) => {
-    const columns = [
-        {
+
+    const [tableData, setTableData] = useState({});
+    const [caca, setCaca] = useState(1);
+
+    const generateColumns = context => {
+
+        const test = context.tests[context.selectedTest];
+        const columns = [{
             title: 'Question',
             dataIndex: 'question',
             width: '40%'
-        },
-        {
-            title: 'Dezacord puternic',
-            dataIndex: 0,
-        },
-        {
-            title: 'Dezacord',
-            dataIndex: 1,
-        },
-        {
-            title: 'Neutru',
-            dataIndex: 2,
-        },
-        {
-            title: 'Acord',
-            dataIndex: 3,
-        },
-        {
-            title: 'Acord puternic',
-            dataIndex: 4,
+        }];
+
+        const columnWidth = 60 / test.scale;
+        for (let i = 0; i < test.scale; i++) {
+            columns.push({
+                title: test.options[i],
+                dataIndex: i,
+                width: columnWidth.toString() + '%'
+            });
         }
-    ];
+
+        return columns;
+    };
+
+    const generateRadiosAndRadiosChecked = context => {
+        const test = context.tests[context.selectedTest];
+        const testQuestions = context.testsQuestions[test.id];
+
+        const radiosChecked = {};
+        const radios = {};
+
+        for (let i = 0; i < testQuestions.length; i++) {
+            let radiosCheckedRow = [];
+            let radiosRow = [];
+
+            for (let j = 0; j < test.scale; j++) {
+                radiosCheckedRow.push(false);
+            }
+            radiosChecked[i] = radiosCheckedRow;
+
+            for (let j = 0; j < test.scale; j++) {
+                radiosRow.push(<Radio checked={radiosChecked[i][j]} value={{row: i, column: j}}
+                                      onChange={handleRadioChange}/>);
+            }
+            radios[i] = radiosRow;
+        }
+
+        return {
+            radios: radios,
+            radiosChecked: radiosChecked
+        };
+    };
+
+    const generateData = (context, radios) => {
+        const test = context.tests[context.selectedTest];
+        const testQuestions = context.testsQuestions[test.id];
+
+        const data = [];
+
+        for (let i = 0; i < testQuestions.length; i++) {
+            const dataItem = {
+                key: i,
+                question: testQuestions[i].question
+            };
+
+            for (let j = 0; j < test.scale; j++) {
+                dataItem[j] = radios[i][j];
+            }
+
+            data.push(dataItem);
+        }
+
+        return data;
+    };
+
+    useEffect(() => {
+        const context = props.location.state.context;
+        const columns = generateColumns(context);
+        const {radios, radiosChecked} = generateRadiosAndRadiosChecked(context);
+        const data = generateData(context, radios);
+
+        setTableData({
+            columns: columns,
+            radios: radios,
+            radiosChecked: radiosChecked,
+            data: data
+        });
+
+        setCaca(3);
+    }, [props.location.state.context.selectedTest]);
 
     const handleRadioChange = (element) => {
         const row = element.target.value.row;
         const column = element.target.value.column;
 
-        let allRadiosOnRow = radios[row];
+        debugger
+        let allRadiosOnRow = tableData.radios[row];
         let checkedList = [];
 
         for (let radio of allRadiosOnRow) {
@@ -54,83 +117,24 @@ const TestForm = (props) => {
             }
         }
 
-        setRadiosChecked({
+        //TODO: In CAZ CA CRAPA, SA VERIFICAM AICI
+
+        const newRadiosChecked = {
+            ...tableData.radiosChecked,
             [row]: checkedList
-        });
+        };
+
+        const newTableData = {
+            ...tableData,
+            radiosChecked: newRadiosChecked
+        };
+
+        setTableData(newTableData);
     };
-
-    const [radiosChecked, setRadiosChecked] = useState({
-        0: columns.map(() => false)
-    });
-
-    const radios = {
-        0: [
-                <Radio checked={radiosChecked[0][0]} value={{row: 0, column: 0}} onChange={handleRadioChange}/>,
-                <Radio checked={radiosChecked[0][1]} value={{row: 0, column: 1}} onChange={handleRadioChange}/>,
-                <Radio checked={radiosChecked[0][2]} value={{row: 0, column: 2}} onChange={handleRadioChange}/>,
-                <Radio checked={radiosChecked[0][3]} value={{row: 0, column: 3}} onChange={handleRadioChange}/>,
-                <Radio checked={radiosChecked[0][4]} value={{row: 0, column: 4}} onChange={handleRadioChange}/>,
-        ]
-    };
-
-    const data = [
-        {
-            key: 0,
-            question: 'salut',
-            0: radios[0][0],
-            1: radios[0][1],
-            2: radios[0][2],
-            3: radios[0][3],
-            4: radios[0][4],
-        },
-        {
-            key: 2,
-            question: 'da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da da '
-        },
-        {
-            key: 3,
-            question: 'da'
-        },
-        {
-            key: 4,
-            question: 'da'
-        },
-        {
-            key: 5,
-            question: 'da'
-        },
-        {
-            key: 6,
-            question: 'da'
-        },
-        {
-            key: 7,
-            question: 'da'
-        },
-        {
-            key: 8,
-            question: 'da'
-        },
-        {
-            key: 9,
-            question: 'da'
-        },
-        {
-            key: 10,
-            question: 'da'
-        },
-        {
-            key: 11,
-            question: 'da'
-        },
-        {
-            key: 12,
-            question: 'da'
-        }
-    ];
 
     const handleSubmitClick = () => {
-        for (let checkedList of Object.values(radiosChecked)) {
+        debugger;
+        for (let checkedList of Object.values(tableData.radiosChecked)) {
             let foundTrue = false;
 
             for (let checked of checkedList) {
@@ -152,21 +156,28 @@ const TestForm = (props) => {
     const handleResetClick = () => {
         let newRadiosChecked = {};
 
-        for (let key of Object.keys(radiosChecked)) {
-            newRadiosChecked[key] = columns.map(() => false);
+        for (let key of Object.keys(tableData.radiosChecked)) {
+            newRadiosChecked[key] = tableData.columns.map(() => false);
         }
 
-        setRadiosChecked(newRadiosChecked);
+        //TODO: In CAZ CA CRAPA, SA VERIFICAM AICI
+
+        const newTableData = {
+            ...tableData,
+            radiosChecked: newRadiosChecked
+        };
+
+        setTableData(newTableData);
     };
 
     return (
         <div>
             <Table
-                columns={columns}
-                dataSource={data}
+                columns={tableData.columns}
+                dataSource={tableData.data}
                 size="small"
-                pagination={ false }
-                scroll={{ y: '35vw' }}
+                pagination={false}
+                scroll={{y: '35vw'}}
 
             />
 

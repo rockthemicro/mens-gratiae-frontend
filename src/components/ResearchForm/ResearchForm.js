@@ -38,12 +38,7 @@ const ResearchForm = (props) => {
 
     const defaultRequiredMessage = "Please select an answer";
 
-    const onFinish = (values) => {
-        console.log('Received values of form: ', values);
-    };
-
     const [questions, setQuestions] = useState([]);
-    const [context, setContext] = useState({});
 
     const translate = language => {
         if (language === EN) {
@@ -69,7 +64,6 @@ const ResearchForm = (props) => {
 
     useEffect(() => {
         if (props.location.state.context !== undefined) {
-            setContext(props.location.state.context);
             const translations = translate(props.location.state.context.research.language);
             const newQuestions = props.location.state.context.questions.map(question => {
                 return {
@@ -146,6 +140,25 @@ const ResearchForm = (props) => {
         };
     };
 
+    const onFinish = (values) => {
+        const answers = {};
+        for (const questionId of Object.keys(values)) {
+            answers[questionId] = Array.isArray(values[questionId]) ? values[questionId] : [values[questionId]];
+        }
+
+        const submission = {
+            genericResearchQuestionAnswers: answers
+        };
+
+        props.history.push("/fillTest", {
+            context: {
+                ...props.location.state.context,
+                submission: submission,
+                selectedTest: 0
+            }
+        });
+    };
+
     return (
         <div>
             <Form
@@ -153,11 +166,11 @@ const ResearchForm = (props) => {
                 {...formItemLayout}
                 onFinish={onFinish}
             >
-                {questions.map((element, index) => {
+                {questions.map((element) => {
                         if (element.type === QTYPE_YES_NO) {
                             return (
                                 <Form.Item
-                                    name={index.toString()}
+                                    name={element.id}
                                     label={element.question}
                                     rules={[
                                         getRule(element.required, element.requiredMessage)
@@ -174,7 +187,7 @@ const ResearchForm = (props) => {
                         } else if (element.type === QTYPE_RANGE) {
                             return (
                                 <Form.Item
-                                    name={index.toString()}
+                                    name={element.id}
                                     label={element.question}
                                     rules={[
                                         getRule(element.required, element.requiredMessage)
@@ -193,7 +206,7 @@ const ResearchForm = (props) => {
                         } else if (element.type === QTYPE_MULTIPLE_CHOICE) {
                             return (
                                 <Form.Item
-                                    name={index.toString()}
+                                    name={element.id}
                                     label={element.question}
                                     rules={[
                                         getRule(element.required, element.requiredMessage)
@@ -207,7 +220,7 @@ const ResearchForm = (props) => {
                         } else if (element.type === QTYPE_TEXT) {
                             return (
                                 <Form.Item
-                                    name={index.toString()}
+                                    name={element.id}
                                     label={element.question}
                                     rules={[
                                         getRule(element.required, element.requiredMessage)
@@ -219,7 +232,7 @@ const ResearchForm = (props) => {
                         } else if (element.type === QTYPE_SINGLE_CHOICE) {
                             return (
                                 <Form.Item
-                                    name={index.toString()}
+                                    name={element.id}
                                     label={element.question}
                                     rules={[
                                         getRule(element.required, element.requiredMessage)
