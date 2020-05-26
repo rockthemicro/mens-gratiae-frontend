@@ -23,7 +23,7 @@ const ResearchDescriptionPage = (props) => {
     const testsQuestions = {};
 
     useEffect(() => {
-        axios.get(endpoints.GET_RESEARCH + "/" + props.location.state.research.id)
+        axios.get(endpoints.GET_RESEARCH + "/" + props.match.params.researchId)
             .then((response) => {
                 if (response.data.status === 'OK') {
                     setContext({

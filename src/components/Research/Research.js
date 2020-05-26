@@ -77,9 +77,7 @@ const Research = (props) => {
     };
 
     const handleItemClick = (item) => () => {
-        props.history.push("/researchDescription", {
-            research: item
-        });
+        props.history.push("/researchDescription/" + item.id);
     };
 
     return (

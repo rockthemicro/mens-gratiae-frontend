@@ -66,9 +66,9 @@ const Root = () => (
                         <Route exact path="/editResearch" component={EditResearchForm}/>
                         <Route exact path="/editTest" component={EditTestForm}/>
 
-                        <Route exact path="/researchDescription" component={ResearchDescriptionPage}/>
                         <Route exact path="/fillResearch" component={ResearchForm}/>
                         <Route exact path="/fillTest" component={TestForm}/>
+                        <Route exact path="/researchDescription/:researchId" component={ResearchDescriptionPage}/>
                     </ContentDiv>
                 </Content>
 
