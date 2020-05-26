@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {connect} from "react-redux";
 import 'antd/dist/antd.css';
 import {withRouter} from "react-router-dom";
@@ -11,13 +11,19 @@ import {
     Checkbox,
     Input
 } from "antd";
-import {QTYPE_MULTIPLE_CHOICE, QTYPE_RANGE, QTYPE_SINGLE_CHOICE, QTYPE_TEXT, QTYPE_YES_NO} from "../constants";
+import {
+    EN, EN_NO,
+    EN_REQUIRED_MESSAGE, EN_YES, IT, IT_NO, IT_REQUIRED_MESSAGE, IT_YES,
+    QTYPE_MULTIPLE_CHOICE,
+    QTYPE_RANGE,
+    QTYPE_SINGLE_CHOICE,
+    QTYPE_TEXT,
+    QTYPE_YES_NO, RO, RO_NO, RO_REQUIRED_MESSAGE, RO_YES
+} from "../constants";
 
-const mapStateToProps = state => ({
-});
+const mapStateToProps = state => ({});
 
-const mapDispatchToProps = dispatch => ({
-});
+const mapDispatchToProps = dispatch => ({});
 
 const formItemLayout = {
     labelCol: {
@@ -28,7 +34,7 @@ const formItemLayout = {
     },
 };
 
-const ResearchForm = () => {
+const ResearchForm = (props) => {
 
     const defaultRequiredMessage = "Please select an answer";
 
@@ -36,56 +42,46 @@ const ResearchForm = () => {
         console.log('Received values of form: ', values);
     };
 
-    const data = [
-        {
-            type: QTYPE_YES_NO,
-            question: "Va place pizza?",
-            required: true,
-            requiredMessage: "Please select an answer",
-            yesText: "Da",
-            noText:"Nu",
-        },
-        {
-            type: QTYPE_RANGE,
-            question: "Uneori cand sunt trist, ascult muzica",
-            required: true,
-            requiredMessage: "Va rugam, selectati un raspuns",
-            range: 5,
-            answers: {
-                1: "Dezacord puternic",
-                3: "Neutru",
-                5: "Acord puternic",
-            },
-        },
-        {
-            type: QTYPE_MULTIPLE_CHOICE,
-            question: "Imi place saaa",
-            answers: [
-                "The href attribute requires a valid value to be accessible. Provide a valid, navigable address as the href value. If you cannot provide a valid href, but still need the element to resemble a link, use a button and change it with appropriate styles.",
-                "B",
-                "C",
-                "D",
-                "E",
-                "F",
-            ],
-        },
-        {
-            type: QTYPE_TEXT,
-            question: "Ce parere aveti de Tudor Gheorghe?",
-        },
-        {
-            type: QTYPE_SINGLE_CHOICE,
-            question: "Cand ati fost ultima oara la un concert?",
-            required: true,
-            answers: [
-                "1 an",
-                "2 ani",
-                "3 ani",
-                "4 ani",
-            ],
-        }
+    const [questions, setQuestions] = useState([]);
+    const [context, setContext] = useState({});
 
-    ];
+    const translate = language => {
+        if (language === EN) {
+            return {
+                requiredMessage: EN_REQUIRED_MESSAGE,
+                yesText: EN_YES,
+                noText: EN_NO
+            }
+        } else if (language === RO) {
+            return {
+                requiredMessage: RO_REQUIRED_MESSAGE,
+                yesText: RO_YES,
+                noText: RO_NO
+            }
+        } else if (language === IT) {
+            return {
+                requiredMessage: IT_REQUIRED_MESSAGE,
+                yesText: IT_YES,
+                noText: IT_NO
+            }
+        }
+    };
+
+    useEffect(() => {
+        if (props.location.state.context !== undefined) {
+            setContext(props.location.state.context);
+            const translations = translate(props.location.state.context.research.language);
+            const newQuestions = props.location.state.context.questions.map(question => {
+                return {
+                    ...question,
+                    required: true,
+                    ...translations
+                }
+            });
+            setQuestions(newQuestions);
+        }
+    }, [props.location.state.context]);
+
 
     const getSelectOptions = (range, answers) => {
         let options = [];
@@ -113,7 +109,7 @@ const ResearchForm = () => {
 
         for (let i = 0; i < size; i++) {
             let value = (
-                <Checkbox value={i.toString()} style={{ lineHeight: '32px' }}>
+                <Checkbox value={i.toString()} style={{lineHeight: '32px'}}>
                     {answers[i]}
                 </Checkbox>
             );
@@ -157,8 +153,7 @@ const ResearchForm = () => {
                 {...formItemLayout}
                 onFinish={onFinish}
             >
-                {data.map((element, index) =>
-                    {
+                {questions.map((element, index) => {
                         if (element.type === QTYPE_YES_NO) {
                             return (
                                 <Form.Item
@@ -190,7 +185,7 @@ const ResearchForm = () => {
                                     }}
                                 >
                                     <Select>
-                                        {getSelectOptions(element.range, element.answers)}
+                                        {getSelectOptions(element.numberOfOptions, element.options)}
                                     </Select>
 
                                 </Form.Item>
@@ -205,7 +200,7 @@ const ResearchForm = () => {
                                     ]}
                                 >
                                     <Checkbox.Group>
-                                        {getCheckboxValues(element.answers)}
+                                        {getCheckboxValues(element.options)}
                                     </Checkbox.Group>
                                 </Form.Item>
                             );
@@ -231,7 +226,7 @@ const ResearchForm = () => {
                                     ]}
                                 >
                                     <Radio.Group>
-                                        {getRadioValues(element.answers)}
+                                        {getRadioValues(element.options)}
                                     </Radio.Group>
                                 </Form.Item>
                             );
