@@ -10,8 +10,6 @@ const mapDispatchToProps = dispatch => ({});
 
 const TestForm = (props) => {
 
-    const [tableData, setTableData] = useState({});
-
     const generateColumns = context => {
 
         const test = context.tests[context.selectedTest];
@@ -33,36 +31,25 @@ const TestForm = (props) => {
         return columns;
     };
 
-    const generateRadiosAndRadiosChecked = context => {
+    const generateRadiosChecked = context => {
         const test = context.tests[context.selectedTest];
         const testQuestions = context.testsQuestions[test.id];
 
         const radiosChecked = {};
-        const radios = {};
 
         for (let i = 0; i < testQuestions.length; i++) {
             let radiosCheckedRow = [];
-            let radiosRow = [];
 
             for (let j = 0; j < test.scale; j++) {
                 radiosCheckedRow.push(false);
             }
             radiosChecked[i] = radiosCheckedRow;
-
-            for (let j = 0; j < test.scale; j++) {
-                radiosRow.push(<Radio checked={radiosChecked[i][j]} value={{row: i, column: j}}
-                                      onChange={handleRadioChange}/>);
-            }
-            radios[i] = radiosRow;
         }
 
-        return {
-            radios: radios,
-            radiosChecked: radiosChecked
-        };
+        return radiosChecked;
     };
 
-    const generateData = (context, radios) => {
+    const generateData = (context) => {
         const test = context.tests[context.selectedTest];
         const testQuestions = context.testsQuestions[test.id];
 
@@ -75,7 +62,13 @@ const TestForm = (props) => {
             };
 
             for (let j = 0; j < test.scale; j++) {
-                dataItem[j] = radios[i][j];
+                dataItem[j] = (
+                    <Radio
+                        checked={radiosChecked[i][j]}
+                        value={{row: i, column: j}}
+                        onChange={handleRadioChange}
+                    />
+                );
             }
 
             data.push(dataItem);
@@ -84,55 +77,59 @@ const TestForm = (props) => {
         return data;
     };
 
+    const [columns, setColumns] = useState(null);
+    const [radiosChecked, setRadiosChecked] = useState(null);
+    const [data, setData] = useState([]);
+
     useEffect(() => {
         const context = props.location.state.context;
-        const columns = generateColumns(context);
-        const {radios, radiosChecked} = generateRadiosAndRadiosChecked(context);
-        const data = generateData(context, radios);
 
-        setTableData({
-            columns: columns,
-            radios: radios,
-            radiosChecked: radiosChecked,
-            data: data
-        });
+        const columns = generateColumns(context);
+        setColumns(columns);
 
     }, [props.location.state.context.selectedTest]);
 
+    useEffect(() => {
+        if (columns !== null) {
+            const context = props.location.state.context;
+
+            const newRadiosChecked = generateRadiosChecked(context);
+            setRadiosChecked(newRadiosChecked);
+        }
+    }, [columns]);
+
+    useEffect(() => {
+        if (radiosChecked !== null) {
+            const context = props.location.state.context;
+
+            const data = generateData(context);
+            setData(data);
+        }
+    }, [radiosChecked]);
+
     const handleRadioChange = (element) => {
-        const row = element.target.value.row;
-        const column = element.target.value.column;
+        const rowId = element.target.value.row;
+        const columnId = element.target.value.column;
 
-        debugger
-        let allRadiosOnRow = tableData.radios[row];
         let checkedList = [];
-
-        for (let radio of allRadiosOnRow) {
-            if (radio.props.value.column !== column) {
+        for (let i = 0; i < columns.length; i++) {
+            if (i !== columnId) {
                 checkedList.push(false);
             } else {
                 checkedList.push(true);
             }
         }
 
-        //TODO: In CAZ CA CRAPA, SA VERIFICAM AICI
-
-        const newRadiosChecked = {
-            ...tableData.radiosChecked,
-            [row]: checkedList
+        let newRadiosChecked = {
+            ...radiosChecked,
+            [rowId]: checkedList
         };
-
-        const newTableData = {
-            ...tableData,
-            radiosChecked: newRadiosChecked
-        };
-
-        setTableData(newTableData);
+        setRadiosChecked(newRadiosChecked);
     };
 
     const handleSubmitClick = () => {
         debugger;
-        for (let checkedList of Object.values(tableData.radiosChecked)) {
+        for (let checkedList of Object.values(radiosChecked)) {
             let foundTrue = false;
 
             for (let checked of checkedList) {
@@ -146,33 +143,26 @@ const TestForm = (props) => {
                 alert('Please fill all the answers before submitting the test');
                 return;
             }
-
-            alert('Test submitted');
         }
+
+        alert('Test submitted');
     };
 
     const handleResetClick = () => {
         let newRadiosChecked = {};
 
-        for (let key of Object.keys(tableData.radiosChecked)) {
-            newRadiosChecked[key] = tableData.columns.map(() => false);
+        for (let key of Object.keys(radiosChecked)) {
+            newRadiosChecked[key] = columns.map(() => false);
         }
 
-        //TODO: In CAZ CA CRAPA, SA VERIFICAM AICI
-
-        const newTableData = {
-            ...tableData,
-            radiosChecked: newRadiosChecked
-        };
-
-        setTableData(newTableData);
+        setRadiosChecked(newRadiosChecked);
     };
 
     return (
         <div>
             <Table
-                columns={tableData.columns}
-                dataSource={tableData.data}
+                columns={columns}
+                dataSource={data}
                 size="small"
                 pagination={false}
                 scroll={{y: '35vw'}}
