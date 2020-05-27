@@ -3,6 +3,8 @@ import {compose} from "redux";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import {Button, Radio, Table} from "antd";
+import axios from "axios";
+import endpoints from "../endpoints";
 
 const mapStateToProps = state => ({});
 
@@ -180,8 +182,18 @@ const TestForm = (props) => {
                 }
             });
         } else {
-            debugger;
-            alert('Test submitted');
+            axios.post(endpoints.ADD_SUBMISION, submission)
+                .then(response => {
+                    if (response.data.status === 'OK') {
+                        alert('Thank you for your submission');
+                        props.history.push("/research");
+                    } else {
+                        alert('There was a problem while posting your submmission');
+                    }
+                })
+                .catch(() => {
+                    alert('There was a problem while posting your submmission');
+                })
         }
 
     };
@@ -201,7 +213,7 @@ const TestForm = (props) => {
             <Table
                 columns={columns}
                 dataSource={data}
-                size="small"
+                size="middle"
                 pagination={false}
                 scroll={{y: '35vw'}}
 
