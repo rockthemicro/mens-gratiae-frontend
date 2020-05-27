@@ -128,7 +128,6 @@ const TestForm = (props) => {
     };
 
     const handleSubmitClick = () => {
-        debugger;
         for (let checkedList of Object.values(radiosChecked)) {
             let foundTrue = false;
 
@@ -145,7 +144,46 @@ const TestForm = (props) => {
             }
         }
 
-        alert('Test submitted');
+        const context = props.location.state.context;
+        const test = context.tests[context.selectedTest];
+        const testQuestions = context.testsQuestions[test.id];
+        const testSubmission = {};
+
+        for (let i = 0; i < testQuestions.length; i++) {
+            let checkedList = radiosChecked[i];
+
+            for (let j = 0; j < checkedList.length; j++) {
+                if (checkedList[j] === true) {
+                    /* we'll have answers indexed from 1, not 0 */
+                    testSubmission[testQuestions[i].id] = j + 1;
+                    break;
+                }
+            }
+        }
+
+        const rangeTestQuestionAnswers = {
+            ...context.submission.rangeTestQuestionAnswers,
+            [test.id]: testSubmission
+        };
+
+        const submission = {
+            ...context.submission,
+            rangeTestQuestionAnswers: rangeTestQuestionAnswers
+        };
+
+        if (context.selectedTest < context.tests.length - 1) {
+            props.history.push("/fillTest", {
+                context: {
+                    ...context,
+                    submission: submission,
+                    selectedTest: context.selectedTest + 1
+                }
+            });
+        } else {
+            debugger;
+            alert('Test submitted');
+        }
+
     };
 
     const handleResetClick = () => {
