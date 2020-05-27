@@ -147,7 +147,9 @@ const ResearchForm = (props) => {
         }
 
         const submission = {
-            genericResearchQuestionAnswers: answers
+            researchId: props.location.state.context.research.id,
+            genericResearchQuestionAnswers: answers,
+            rangeTestQuestionAnswers: {}
         };
 
         props.history.push("/fillTest", {
