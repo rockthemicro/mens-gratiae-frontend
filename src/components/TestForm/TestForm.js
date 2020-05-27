@@ -11,7 +11,6 @@ const mapDispatchToProps = dispatch => ({});
 const TestForm = (props) => {
 
     const [tableData, setTableData] = useState({});
-    const [caca, setCaca] = useState(1);
 
     const generateColumns = context => {
 
@@ -98,7 +97,6 @@ const TestForm = (props) => {
             data: data
         });
 
-        setCaca(3);
     }, [props.location.state.context.selectedTest]);
 
     const handleRadioChange = (element) => {
