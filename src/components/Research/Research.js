@@ -5,6 +5,7 @@ import {List, Avatar, Button} from 'antd';
 import styled from 'styled-components';
 import endpoints from '../endpoints';
 import formExistsAction from "../../actions/formExistsAction";
+import {EN, IT, RO} from "../constants";
 
 const ClickableStyle = styled.div`
     cursor: pointer;
@@ -24,10 +25,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const Research = (props) => {
-
-    const RO = 'ROM';
-    const IT = 'ITA';
-    const EN = 'ENG';
 
     const [researches, setResearches] = useState([]);
 
@@ -77,9 +74,7 @@ const Research = (props) => {
     };
 
     const handleItemClick = (item) => () => {
-        props.history.push("/researchDescription", {
-            research: item
-        });
+        props.history.push("/researchDescription/" + item.id);
     };
 
     return (
