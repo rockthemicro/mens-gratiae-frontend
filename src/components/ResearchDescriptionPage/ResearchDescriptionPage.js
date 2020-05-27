@@ -6,8 +6,10 @@ import styled from 'styled-components';
 import {Button, Form, Radio} from "antd";
 
 const TitleStyle = styled.div`
-    margin: 0 auto;
-    
+    text-align: center;
+    font-family: Arial;
+    font-size: 32px;
+    margin-bottom: 50px;
 `;
 
 const formItemLayout = {
@@ -92,7 +94,7 @@ const ResearchDescriptionPage = (props) => {
     return (
         <div>
             <TitleStyle onClick={bla}>{context.research.title}</TitleStyle>
-            <div>{context.research.fullDesc}</div>
+            <div style={{fontFamily: "Verdana", fontSize: 20}} dangerouslySetInnerHTML={{__html: context.research.fullDesc}}/>
             <Form
                 name="form"
                 onFinish={onFinish}

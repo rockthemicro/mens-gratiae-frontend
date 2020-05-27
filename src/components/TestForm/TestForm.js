@@ -201,7 +201,7 @@ const TestForm = (props) => {
             <Table
                 columns={columns}
                 dataSource={data}
-                size="small"
+                size="middle"
                 pagination={false}
                 scroll={{y: '35vw'}}
 
