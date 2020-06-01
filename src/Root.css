@@ -1,0 +1,11 @@
+
+.content {
+    padding: 3% 15% 0;
+}
+
+
+@media (max-width: 700px) {
+    .content {
+        padding: 3% 0 0;
+    }
+}
