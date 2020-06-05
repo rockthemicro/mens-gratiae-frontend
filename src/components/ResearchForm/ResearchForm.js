@@ -20,6 +20,7 @@ import {
     QTYPE_TEXT,
     QTYPE_YES_NO, RO, RO_NO, RO_REQUIRED_MESSAGE, RO_YES
 } from "../constants";
+import {useMediaQuery} from "react-responsive";
 
 const mapStateToProps = state => ({});
 
@@ -140,6 +141,10 @@ const ResearchForm = (props) => {
         };
     };
 
+    const isTabletOrMobileDevice = useMediaQuery({
+        query: '(max-device-width: 1224px)'
+    });
+
     const onFinish = (values) => {
         const answers = {};
         for (const questionId of Object.keys(values)) {
@@ -152,13 +157,21 @@ const ResearchForm = (props) => {
             rangeTestQuestionAnswers: {}
         };
 
-        props.history.push("/fillTest", {
-            context: {
-                ...props.location.state.context,
-                submission: submission,
-                selectedTest: 0
-            }
-        });
+        let newContext = {
+            ...props.location.state.context,
+            submission: submission,
+            selectedTest: 0
+        };
+
+        if (isTabletOrMobileDevice) {
+            props.history.push("/fillMobileTest", {
+                context: newContext
+            });
+        } else {
+            props.history.push("/fillTest", {
+                context: newContext
+            });
+        }
     };
 
     return (
