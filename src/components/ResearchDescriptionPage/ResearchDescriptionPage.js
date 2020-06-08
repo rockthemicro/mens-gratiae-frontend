@@ -4,6 +4,18 @@ import axios from "axios";
 import endpoints from "../endpoints";
 import styled from 'styled-components';
 import {Button, Form, Radio} from "antd";
+import {
+    EN,
+    EN_AGREE_SHARE_INFO, EN_NO,
+    EN_YES,
+    IT,
+    IT_AGREE_SHARE_INFO, IT_NO,
+    IT_YES,
+    RO,
+    RO_AGREE_SHARE_INFO, RO_NO,
+    RO_YES
+} from "../constants";
+import {useMediaQuery} from "react-responsive";
 
 const TitleStyle = styled.div`
     text-align: center;
@@ -15,6 +27,12 @@ const TitleStyle = styled.div`
 const formItemLayout = {
     wrapperCol: {
         offset: 10,
+        span: 12
+    }
+};
+
+const formItemMobileLayout = {
+    wrapperCol: {
         span: 12
     }
 };
@@ -33,6 +51,12 @@ const ResearchDescriptionPage = (props) => {
     });
 
     const testsQuestions = {};
+
+    const isTabletOrMobileDevice = useMediaQuery({
+        query: '(max-device-width: 1224px)'
+    });
+
+    const actualFormItemLayout = isTabletOrMobileDevice ? formItemMobileLayout : formItemLayout;
 
     useEffect(() => {
         axios.get(endpoints.GET_RESEARCH + "/" + props.match.params.researchId)
@@ -98,11 +122,13 @@ const ResearchDescriptionPage = (props) => {
             <Form
                 name="form"
                 onFinish={onFinish}
-                {...formItemLayout}
+                {...actualFormItemLayout}
             >
 
                 <Form.Item>
-                    Sunteti de acord cu furnizarea datelor dumneavoastra?
+                    {RO === context.research.language && RO_AGREE_SHARE_INFO}
+                    {IT === context.research.language && IT_AGREE_SHARE_INFO}
+                    {EN === context.research.language && EN_AGREE_SHARE_INFO}
                 </Form.Item>
 
                 <Form.Item
@@ -113,15 +139,22 @@ const ResearchDescriptionPage = (props) => {
                     }]}
                 >
                     <Radio.Group>
-                        <Radio value="yes">DA</Radio>
-                        <Radio value="no">NU</Radio>
+                        <Radio value="yes">
+                            {RO === context.research.language && RO_YES}
+                            {IT === context.research.language && IT_YES}
+                            {EN === context.research.language && EN_YES}
+                        </Radio>
+
+                        <Radio value="no">
+                            {RO === context.research.language && RO_NO}
+                            {IT === context.research.language && IT_NO}
+                            {EN === context.research.language && EN_NO}
+                        </Radio>
                     </Radio.Group>
 
                 </Form.Item>
 
-                <Form.Item
-                    wrapperCol={{offset: 10}}
-                >
+                <Form.Item>
                     <Button type="primary" htmlType="submit">Submit</Button>
                 </Form.Item>
 
