@@ -65,6 +65,11 @@ const ResearchForm = (props) => {
 
     useEffect(() => {
         if (props.location.state.context !== undefined) {
+
+            if (props.location.state.context.questions.length === 0) {
+                return onFinish({});
+            }
+
             const translations = translate(props.location.state.context.research.language);
             const newQuestions = props.location.state.context.questions.map(question => {
                 return {
