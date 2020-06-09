@@ -15,6 +15,8 @@ import EditResearchForm from "./components/EditResearchForm";
 import EditTestForm from "./components/EditTestForm";
 import TestForm from "./components/TestForm";
 import ResearchDescriptionPage from "./components/ResearchDescriptionPage";
+import './Root.css';
+import MobileTestForm from "./components/MobileTestForm";
 
 const {Header, Content, Footer} = Layout;
 
@@ -36,6 +38,14 @@ const Logo = styled.div`
 const CustomHeader = styled.div`
     box-shadow: 0 2px 15px 0 rgba(0,0,0,1);
     z-index: 10;
+    
+    @media (max-device-width: 1224px) {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        flex-direction: row;
+        overflow-x: scroll;
+    }
 `;
 
 const Root = () => (
@@ -54,7 +64,7 @@ const Root = () => (
                     </Header>
                 </CustomHeader>
 
-                <Content style={{padding: '3% 15% 0%'}}>
+                <Content className="content">
                     <ContentDiv>
                         <Route exact path="/" component={Home}/>
                         <Route exact path="/about" component={About}/>
@@ -69,6 +79,8 @@ const Root = () => (
                         <Route exact path="/fillResearch" component={ResearchForm}/>
                         <Route exact path="/fillTest" component={TestForm}/>
                         <Route exact path="/researchDescription/:researchId" component={ResearchDescriptionPage}/>
+
+                        <Route exact path="/fillMobileTest" component={MobileTestForm}/>
                     </ContentDiv>
                 </Content>
 

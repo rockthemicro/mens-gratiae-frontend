@@ -20,15 +20,21 @@ import {
     QTYPE_TEXT,
     QTYPE_YES_NO, RO, RO_NO, RO_REQUIRED_MESSAGE, RO_YES
 } from "../constants";
+import {useMediaQuery} from "react-responsive";
 
 const mapStateToProps = state => ({});
 
 const mapDispatchToProps = dispatch => ({});
 
 const formItemLayout = {
-    labelCol: {
-        span: 6,
+    wrapperCol: {
+        span: 8,
+        offset: 10,
     },
+};
+
+
+const formItemMobileLayout = {
     wrapperCol: {
         span: 8,
     },
@@ -39,6 +45,12 @@ const ResearchForm = (props) => {
     const defaultRequiredMessage = "Please select an answer";
 
     const [questions, setQuestions] = useState([]);
+
+    const isTabletOrMobileDevice = useMediaQuery({
+        query: '(max-device-width: 1224px)'
+    });
+
+    const actualFormItemLayout = isTabletOrMobileDevice ? formItemMobileLayout : formItemLayout;
 
     const translate = language => {
         if (language === EN) {
@@ -64,6 +76,11 @@ const ResearchForm = (props) => {
 
     useEffect(() => {
         if (props.location.state.context !== undefined) {
+
+            if (props.location.state.context.questions.length === 0) {
+                return onFinish({});
+            }
+
             const translations = translate(props.location.state.context.research.language);
             const newQuestions = props.location.state.context.questions.map(question => {
                 return {
@@ -152,98 +169,131 @@ const ResearchForm = (props) => {
             rangeTestQuestionAnswers: {}
         };
 
-        props.history.push("/fillTest", {
-            context: {
-                ...props.location.state.context,
-                submission: submission,
-                selectedTest: 0
-            }
-        });
+        let newContext = {
+            ...props.location.state.context,
+            submission: submission,
+            selectedTest: 0
+        };
+
+        if (isTabletOrMobileDevice) {
+            props.history.push("/fillMobileTest", {
+                context: newContext
+            });
+        } else {
+            props.history.push("/fillTest", {
+                context: newContext
+            });
+        }
     };
 
     return (
         <div>
             <Form
                 name="research_form"
-                {...formItemLayout}
+                {...actualFormItemLayout}
                 onFinish={onFinish}
             >
                 {questions.map((element) => {
                         if (element.type === QTYPE_YES_NO) {
                             return (
-                                <Form.Item
-                                    name={element.id}
-                                    label={element.question}
-                                    rules={[
-                                        getRule(element.required, element.requiredMessage)
-                                    ]}
-                                >
-                                    <Radio.Group>
-                                        <Radio value="yes">{element.yesText}</Radio>
-                                        <Radio value="no">{element.noText}</Radio>
-                                    </Radio.Group>
+                                <div>
+                                    <Form.Item>
+                                        {element.question}
+                                    </Form.Item>
 
-                                </Form.Item>
+                                    <Form.Item
+                                        name={element.id}
+                                        rules={[
+                                            getRule(element.required, element.requiredMessage)
+                                        ]}
+                                    >
+                                        <Radio.Group>
+                                            <Radio value="yes">{element.yesText}</Radio>
+                                            <Radio value="no">{element.noText}</Radio>
+                                        </Radio.Group>
+
+                                    </Form.Item>
+                                </div>
                             );
 
                         } else if (element.type === QTYPE_RANGE) {
                             return (
-                                <Form.Item
-                                    name={element.id}
-                                    label={element.question}
-                                    rules={[
-                                        getRule(element.required, element.requiredMessage)
-                                    ]}
-                                    hasFeedback
-                                    wrapperCol={{
-                                        span: 3,
-                                    }}
-                                >
-                                    <Select>
-                                        {getSelectOptions(element.numberOfOptions, element.options)}
-                                    </Select>
+                                <div>
+                                    <Form.Item>
+                                        {element.question}
+                                    </Form.Item>
 
-                                </Form.Item>
+                                    <Form.Item
+                                        name={element.id}
+                                        rules={[
+                                            getRule(element.required, element.requiredMessage)
+                                        ]}
+                                        hasFeedback
+                                        wrapperCol={{
+                                            span: 3,
+                                        }}
+                                    >
+                                        <Select>
+                                            {getSelectOptions(element.numberOfOptions, element.options)}
+                                        </Select>
+
+                                    </Form.Item>
+                                </div>
                             );
                         } else if (element.type === QTYPE_MULTIPLE_CHOICE) {
                             return (
-                                <Form.Item
-                                    name={element.id}
-                                    label={element.question}
-                                    rules={[
-                                        getRule(element.required, element.requiredMessage)
-                                    ]}
-                                >
-                                    <Checkbox.Group>
-                                        {getCheckboxValues(element.options)}
-                                    </Checkbox.Group>
-                                </Form.Item>
+                                <div>
+                                    <Form.Item>
+                                        {element.question}
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        name={element.id}
+                                        rules={[
+                                            getRule(element.required, element.requiredMessage)
+                                        ]}
+                                    >
+                                        <Checkbox.Group>
+                                            {getCheckboxValues(element.options)}
+                                        </Checkbox.Group>
+                                    </Form.Item>
+                                </div>
                             );
                         } else if (element.type === QTYPE_TEXT) {
                             return (
-                                <Form.Item
-                                    name={element.id}
-                                    label={element.question}
-                                    rules={[
-                                        getRule(element.required, element.requiredMessage)
-                                    ]}
-                                >
-                                    <Input.TextArea rows={4}/>
-                                </Form.Item>
+                                <div>
+                                    <Form.Item>
+                                        {element.question}
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        name={element.id}
+                                        rules={[
+                                            getRule(element.required, element.requiredMessage)
+                                        ]}
+                                    >
+                                        <Input.TextArea rows={4}/>
+                                    </Form.Item>
+                                </div>
                             );
                         } else if (element.type === QTYPE_SINGLE_CHOICE) {
                             return (
-                                <Form.Item
-                                    name={element.id}
-                                    label={element.question}
-                                    rules={[
-                                        getRule(element.required, element.requiredMessage)
-                                    ]}
-                                >
-                                    <Radio.Group>
-                                        {getRadioValues(element.options)}
-                                    </Radio.Group>
-                                </Form.Item>
+                                <div>
+                                    <Form.Item>
+                                        {element.question}
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        name={element.id}
+                                        rules={[
+                                            getRule(element.required, element.requiredMessage)
+                                        ]}
+                                    >
+                                        <Radio.Group>
+                                            {getRadioValues(element.options)}
+                                        </Radio.Group>
+                                    </Form.Item>
+                                </div>
                             );
                         } else {
                             return (
@@ -254,10 +304,7 @@ const ResearchForm = (props) => {
                 )}
 
                 <Form.Item
-                    wrapperCol={{
-                        span: 12,
-                        offset: 6,
-                    }}
+                    {...actualFormItemLayout}
                 >
                     <Button type="primary" htmlType="submit">
                         Submit
