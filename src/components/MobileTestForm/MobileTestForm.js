@@ -28,7 +28,7 @@ const MobileTestForm = (props) => {
         });
 
         setValues(newValues);
-    }, []);
+    }, [props.location.state.context.selectedTest]);
 
     const handleRadioClick = (question, option) => {
         setValues({
