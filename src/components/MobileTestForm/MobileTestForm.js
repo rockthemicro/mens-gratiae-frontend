@@ -23,9 +23,9 @@ const MobileTestForm = (props) => {
     useEffect(() => {
         const newValues = {};
 
-        testQuestions.map(testQuestion => {
+        for (const testQuestion of testQuestions) {
             newValues[testQuestion.id] = -1;
-        });
+        }
 
         setValues(newValues);
     }, [props.location.state.context.selectedTest]);
