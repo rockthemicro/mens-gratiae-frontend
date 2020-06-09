@@ -33,11 +33,24 @@ const formItemLayout = {
     },
 };
 
+
+const formItemMobileLayout = {
+    wrapperCol: {
+        span: 8,
+    },
+};
+
 const ResearchForm = (props) => {
 
     const defaultRequiredMessage = "Please select an answer";
 
     const [questions, setQuestions] = useState([]);
+
+    const isTabletOrMobileDevice = useMediaQuery({
+        query: '(max-device-width: 1224px)'
+    });
+
+    const actualFormItemLayout = isTabletOrMobileDevice ? formItemMobileLayout : formItemLayout;
 
     const translate = language => {
         if (language === EN) {
@@ -144,10 +157,6 @@ const ResearchForm = (props) => {
         };
     };
 
-    const isTabletOrMobileDevice = useMediaQuery({
-        query: '(max-device-width: 1224px)'
-    });
-
     const onFinish = (values) => {
         const answers = {};
         for (const questionId of Object.keys(values)) {
@@ -181,7 +190,7 @@ const ResearchForm = (props) => {
         <div>
             <Form
                 name="research_form"
-                {...formItemLayout}
+                {...actualFormItemLayout}
                 onFinish={onFinish}
             >
                 {questions.map((element) => {
@@ -295,10 +304,7 @@ const ResearchForm = (props) => {
                 )}
 
                 <Form.Item
-                    wrapperCol={{
-                        span: 12,
-                        offset: 10,
-                    }}
+                    {...actualFormItemLayout}
                 >
                     <Button type="primary" htmlType="submit">
                         Submit
