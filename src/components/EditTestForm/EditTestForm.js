@@ -24,12 +24,15 @@ const mapDispatchToProps = dispatch => ({
     testFormExistsAction: (test_form_exists) => dispatch(testFormExistsAction(test_form_exists)),
 });
 
+
+const itemSpan = 12;
+
 const formItemLayout = {
     labelCol: {
         span: 8,
     },
     wrapperCol: {
-        span: 8,
+        span: itemSpan,
     },
 };
 
@@ -272,7 +275,7 @@ const EditTestForm = (props) => {
                         return (
                             <Form.Item
                                 wrapperCol={{
-                                    span: 8,
+                                    span: itemSpan,
                                     offset: 8,
                                 }}
                                 name={extraField.answerName}
@@ -301,7 +304,7 @@ const EditTestForm = (props) => {
                 >
                     <Form.Item
                         wrapperCol={{
-                            span: 8,
+                            span: itemSpan,
                             offset: 8,
                         }}
                         style={{
@@ -334,7 +337,7 @@ const EditTestForm = (props) => {
 
                     <Form.Item
                         wrapperCol={{
-                            span: 8,
+                            span: itemSpan,
                             offset: 8,
                         }}
                     >

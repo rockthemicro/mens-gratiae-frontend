@@ -27,12 +27,14 @@ const mapDispatchToProps = dispatch => ({
     testFormExistsAction: (form_exists) => dispatch(testFormExistsAction(form_exists)),
 });
 
+const itemSpan = 12;
+
 const formItemLayout = {
     labelCol: {
         span: 8,
     },
     wrapperCol: {
-        span: 8,
+        span: itemSpan,
     },
 };
 
@@ -255,7 +257,7 @@ const EditResearchForm = (props) => {
                     ]}
                     hasFeedback
                     wrapperCol={{
-                        span: 3,
+                        span: itemSpan,
                     }}
                 >
                     <Select>
@@ -272,7 +274,7 @@ const EditResearchForm = (props) => {
 
                     <Form.Item
                         wrapperCol={{
-                            span: 8,
+                            span: itemSpan,
                             offset: 8,
                         }}
                         style={{
@@ -306,7 +308,7 @@ const EditResearchForm = (props) => {
                     <Form.Item
                         name="question_list"
                         wrapperCol={{
-                            span: 8,
+                            span: itemSpan,
                             offset: 8,
                         }}
                     >
@@ -338,7 +340,7 @@ const EditResearchForm = (props) => {
 
                     <Form.Item
                         wrapperCol={{
-                            span: 8,
+                            span: itemSpan,
                             offset: 8,
                         }}
                         style={{
@@ -363,7 +365,7 @@ const EditResearchForm = (props) => {
                     <Form.Item
                         name="test_list"
                         wrapperCol={{
-                            span: 8,
+                            span: itemSpan,
                             offset: 8,
                         }}
                     >
