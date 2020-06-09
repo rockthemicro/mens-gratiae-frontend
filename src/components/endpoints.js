@@ -12,12 +12,15 @@ export default {
 
     CREATE_TEST: HOST_NAME + '/tests/add',
     UPDATE_TEST: HOST_NAME + '/tests/update',
+    DELETE_TEST: HOST_NAME + '/tests',
 
     CREATE_GENERIC_RESEARCH_QUESTION: HOST_NAME + '/researches/genericResearchQuestions/add',
     UPDATE_GENERIC_RESEARCH_QUESTION: HOST_NAME + '/researches/genericResearchQuestions/update',
+    DELETE_GENERIC_RESEARCH_QUESTION: HOST_NAME + '/researches/genericResearchQuestions',
 
     CREATE_TEST_QUESTION: HOST_NAME + '/tests/rangeTestQuestions/add',
     UPDATE_TEST_QUESTION: HOST_NAME + '/tests/rangeTestQuestions/update',
+    DELETE_TEST_QUESTION: HOST_NAME + '/tests/rangeTestQuestions',
 
     ADD_SUBMISION: HOST_NAME + '/researches/addSubmission'
 };

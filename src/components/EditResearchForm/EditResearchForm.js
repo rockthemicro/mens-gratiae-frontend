@@ -140,6 +140,24 @@ const EditResearchForm = (props) => {
         props.editQuestionVisible();
     };
 
+    const handleDeleteQuestion = (item) => () => {
+        axios.delete(endpoints.DELETE_GENERIC_RESEARCH_QUESTION + '/' + item.id.toString())
+            .then((response) => {
+                if (response.data.status === 'OK') {
+                    props.history.push("/editResearch", {
+                        research: {
+                            ...research
+                        }
+                    });
+                } else {
+                    alert('Something went wrong while deleting research question')
+                }
+            })
+            .catch(() => {
+                alert('Something went wrong while deleting research question');
+            })
+    };
+
     const handleAddTest = () => {
         props.testFormExistsAction(false);
         props.history.push("/editTest", {
@@ -154,6 +172,24 @@ const EditResearchForm = (props) => {
             test: item,
             research: research
         });
+    };
+
+    const handleDeleteTest = (item) => () => {
+        axios.delete(endpoints.DELETE_TEST + '/' + item.id.toString())
+            .then((response) => {
+                if (response.data.status === 'OK') {
+                    props.history.push("/editResearch", {
+                        research: {
+                            ...research
+                        }
+                    });
+                } else {
+                    alert('Something went wrong while deleting test')
+                }
+            })
+            .catch(() => {
+                alert('Something went wrong while deleting test');
+            })
     };
 
     /* populate research data */
@@ -322,14 +358,14 @@ const EditResearchForm = (props) => {
                                     style={{padding: '16px 0'}}
                                     actions={[
                                         <ClickableStyle onClick={handleEditQuestion(item)}>Edit</ClickableStyle>,
-                                        <ClickableStyle>Delete</ClickableStyle>,
+                                        <ClickableStyle onClick={handleDeleteQuestion(item)}>Delete</ClickableStyle>,
                                         <ClickableStyle><UpOutlined/></ClickableStyle>,
                                         <ClickableStyle><DownOutlined/></ClickableStyle>,
                                     ]}
                                 >
 
                                     <List.Item.Meta
-                                        title={'Question' + (id + 1).toString()}
+                                        title={'Question ' + (id + 1).toString()}
                                         description={item.question}
                                     />
                                     Type: {item.type}
@@ -381,7 +417,11 @@ const EditResearchForm = (props) => {
                                         <ClickableStyle onClick={handleEditTest(item)}>
                                             Edit
                                         </ClickableStyle>,
-                                        <ClickableStyle>Delete</ClickableStyle>,
+
+                                        <ClickableStyle onClick={handleDeleteTest(item)}>
+                                            Delete
+                                        </ClickableStyle>,
+
                                         <ClickableStyle><UpOutlined/></ClickableStyle>,
                                         <ClickableStyle><DownOutlined/></ClickableStyle>,
                                     ]}

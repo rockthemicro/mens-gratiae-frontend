@@ -199,6 +199,28 @@ const EditTestForm = (props) => {
         props.editQuestionVisible();
     };
 
+
+    const handleDeleteQuestion = (item) => () => {
+        axios.delete(endpoints.DELETE_TEST_QUESTION + '/' + item.id.toString())
+            .then((response) => {
+                if (response.data.status === 'OK') {
+                    props.history.push("/editTest", {
+                        research: {
+                            ...researchProp
+                        },
+                        test: {
+                            ...testProp // trigger useEffect
+                        }
+                    });
+                } else {
+                    alert('Something went wrong while deleting test question')
+                }
+            })
+            .catch(() => {
+                alert('Something went wrong while deleting test question');
+            })
+    };
+
     return (
         <div
             ref={divRef}
@@ -353,7 +375,11 @@ const EditTestForm = (props) => {
                                         <ClickableStyle onClick={handleEditQuestion(item)}>
                                             Edit
                                         </ClickableStyle>,
-                                        <ClickableStyle>Delete</ClickableStyle>,
+
+                                        <ClickableStyle onClick={handleDeleteQuestion(item)}>
+                                            Delete
+                                        </ClickableStyle>,
+
                                         <ClickableStyle><UpOutlined/></ClickableStyle>,
                                         <ClickableStyle><DownOutlined/></ClickableStyle>,
                                     ]}
