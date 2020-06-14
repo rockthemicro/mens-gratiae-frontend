@@ -9,12 +9,12 @@ import {
     Radio,
     Select,
     Checkbox,
-    Input
+    Input, InputNumber
 } from "antd";
 import {
     EN, EN_NO,
     EN_REQUIRED_MESSAGE, EN_YES, IT, IT_NO, IT_REQUIRED_MESSAGE, IT_YES,
-    QTYPE_MULTIPLE_CHOICE,
+    QTYPE_MULTIPLE_CHOICE, QTYPE_NUMBER,
     QTYPE_RANGE,
     QTYPE_SINGLE_CHOICE,
     QTYPE_TEXT,
@@ -276,6 +276,28 @@ const ResearchForm = (props) => {
                                     </Form.Item>
                                 </div>
                             );
+
+                        } else if (element.type === QTYPE_NUMBER) {
+                            return (
+                                <div>
+                                    <Form.Item>
+                                        {element.question}
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        name={element.id}
+                                        rules={[
+                                            getRule(element.required, element.requiredMessage)
+                                        ]}
+                                    >
+                                        <InputNumber
+                                            min={8}
+                                            style={{width: "100%"}}
+                                        />
+                                    </Form.Item>
+                                </div>
+                            );
+
                         } else if (element.type === QTYPE_SINGLE_CHOICE) {
                             return (
                                 <div>
