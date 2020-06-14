@@ -3,6 +3,7 @@ export const QTYPE_RANGE = "RANGE";
 export const QTYPE_SINGLE_CHOICE = "SINGLE_CHOICE";
 export const QTYPE_MULTIPLE_CHOICE = "MULTIPLE_CHOICE";
 export const QTYPE_TEXT = "TEXT";
+export const QTYPE_NUMBER = "NUMBER";
 
 export const RO = 'ROM';
 export const IT = 'ITA';

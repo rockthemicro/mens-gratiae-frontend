@@ -4,7 +4,7 @@ import {compose} from "redux";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {
-    QTYPE_MULTIPLE_CHOICE,
+    QTYPE_MULTIPLE_CHOICE, QTYPE_NUMBER,
     QTYPE_RANGE,
     QTYPE_SINGLE_CHOICE,
     QTYPE_TEXT,
@@ -236,6 +236,7 @@ const EditQuestionForm = (props) => {
                     <Select.Option value={QTYPE_SINGLE_CHOICE}>{QTYPE_SINGLE_CHOICE}</Select.Option>
                     <Select.Option value={QTYPE_MULTIPLE_CHOICE}>{QTYPE_MULTIPLE_CHOICE}</Select.Option>
                     <Select.Option value={QTYPE_TEXT}>{QTYPE_TEXT}</Select.Option>
+                    <Select.Option value={QTYPE_NUMBER}>{QTYPE_NUMBER}</Select.Option>
                 </Select>
 
             </Form.Item>
