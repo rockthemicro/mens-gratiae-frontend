@@ -74,6 +74,8 @@ const ResearchForm = (props) => {
         }
     };
 
+    const divRef = React.useRef();
+
     useEffect(() => {
         if (props.location.state.context !== undefined) {
 
@@ -90,6 +92,10 @@ const ResearchForm = (props) => {
                 }
             });
             setQuestions(newQuestions);
+
+            setTimeout(() => {
+                divRef.current.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'start'});
+            }, 100);
         }
     }, [props.location.state.context]);
 
@@ -187,7 +193,7 @@ const ResearchForm = (props) => {
     };
 
     return (
-        <div>
+        <div ref={divRef}>
             <Form
                 name="research_form"
                 {...actualFormItemLayout}

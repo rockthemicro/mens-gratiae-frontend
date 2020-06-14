@@ -20,6 +20,8 @@ const MobileTestForm = (props) => {
     const test = context.tests[context.selectedTest];
     const testQuestions = context.testsQuestions[test.id];
 
+    const divRef = React.useRef();
+
     useEffect(() => {
         const newValues = {};
 
@@ -28,6 +30,10 @@ const MobileTestForm = (props) => {
         }
 
         setValues(newValues);
+
+        setTimeout(() => {
+            divRef.current.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'start'});
+        }, 100);
     }, [props.location.state.context.selectedTest]);
 
     const handleRadioClick = (question, option) => {
@@ -84,7 +90,7 @@ const MobileTestForm = (props) => {
     };
 
     return (
-        <div>
+        <div ref={divRef}>
             <div>
                 {context.tests[context.selectedTest].description}
             </div>

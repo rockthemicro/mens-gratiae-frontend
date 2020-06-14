@@ -215,7 +215,7 @@ const TestForm = (props) => {
                 dataSource={data}
                 size="middle"
                 pagination={false}
-                scroll={{y: '30vw'}}
+                scroll={{y: '30vw', scrollToFirstRowOnChange: true}}
 
             />
 
