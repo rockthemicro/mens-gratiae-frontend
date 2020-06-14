@@ -26,6 +26,7 @@ const ContentDiv = styled.div`
     height: 100%;
     overflow: auto;
     position: relative;
+    padding-bottom: 70px;
 `;
 
 const Logo = styled.div`
@@ -51,7 +52,7 @@ const CustomHeader = styled.div`
 const Root = () => (
     <div>
         <Router>
-            <Layout className="layout" style={{height: "100vh"}}>
+            <Layout className="layout" style={{minHeight: "100vh"}}>
                 <CustomHeader>
                     <Header>
                         <Logo>
