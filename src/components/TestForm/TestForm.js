@@ -60,7 +60,7 @@ const TestForm = (props) => {
         for (let i = 0; i < testQuestions.length; i++) {
             const dataItem = {
                 key: i,
-                question: testQuestions[i].question
+                question: (i + 1).toString() + ". " + testQuestions[i].question
             };
 
             for (let j = 0; j < test.scale; j++) {
@@ -83,6 +83,8 @@ const TestForm = (props) => {
     const [radiosChecked, setRadiosChecked] = useState(null);
     const [data, setData] = useState([]);
 
+    const divRef = React.useRef();
+
     useEffect(() => {
         const context = props.location.state.context;
 
@@ -97,6 +99,10 @@ const TestForm = (props) => {
 
             const newRadiosChecked = generateRadiosChecked(context);
             setRadiosChecked(newRadiosChecked);
+
+            setTimeout(() => {
+                divRef.current.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'start'});
+            }, 100);
         }
     }, [columns]);
 
@@ -209,7 +215,14 @@ const TestForm = (props) => {
     };
 
     return (
-        <div>
+        <div ref={divRef}>
+            <div
+                style={{fontFamily: "Verdana", fontSize: 20}}
+                dangerouslySetInnerHTML={{__html: props.location.state.context.tests[props.location.state.context.selectedTest].description}}
+            />
+
+            <br/>
+
             <Table
                 columns={columns}
                 dataSource={data}

@@ -91,9 +91,10 @@ const MobileTestForm = (props) => {
 
     return (
         <div ref={divRef}>
-            <div>
-                {context.tests[context.selectedTest].description}
-            </div>
+            <div
+                style={{fontFamily: "Verdana", fontSize: 20}}
+                dangerouslySetInnerHTML={{__html: context.tests[context.selectedTest].description}}
+            />
             {testQuestions.map((testQuestion, testQuesionIndex) => (
 
                 <div>
@@ -114,20 +115,6 @@ const MobileTestForm = (props) => {
                     <WhiteSpace size="lg" />
                 </div>
             ))}
-            {/*<List renderHeader={() => 'header'}>*/}
-            {/*    {data.map((elem) => (*/}
-            {/*        <Radio.RadioItem*/}
-            {/*            key={elem.value}*/}
-            {/*            checked={elem.value === values[0]}*/}
-            {/*            onChange={() => handleRadioClick(0, elem.value)}*/}
-            {/*        >*/}
-            {/*            {elem.label}*/}
-            {/*        </Radio.RadioItem>*/}
-            {/*    ))}*/}
-            {/*</List>*/}
-            {/*<WhiteSpace size="lg" />*/}
-
-
 
             <WingBlank>
                 <Button type="primary" onClick={handleSubmit}>Submit</Button>
