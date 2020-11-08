@@ -105,7 +105,8 @@ const MobileTestForm = (props) => {
                         {test.options.map((option, index) => (
                             <Radio.RadioItem
                                 checked={index === values[testQuestion.id]}
-                                onChange={() => handleRadioClick(testQuestion.id, index)}
+                                /* we'll have answers indexed from 1, not 0 */
+                                onChange={() => handleRadioClick(testQuestion.id, index + 1)}
                             >
                                 {option}
                             </Radio.RadioItem>
