@@ -22,5 +22,6 @@ export default {
     UPDATE_TEST_QUESTION: HOST_NAME + '/tests/rangeTestQuestions/update',
     DELETE_TEST_QUESTION: HOST_NAME + '/tests/rangeTestQuestions',
 
-    ADD_SUBMISION: HOST_NAME + '/researches/addSubmission'
+    ADD_SUBMISION: HOST_NAME + '/researches/addSubmission',
+    GET_SUBMISSIONS: HOST_NAME + '/researches/getSubmissions'
 };
