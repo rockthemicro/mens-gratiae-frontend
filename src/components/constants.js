@@ -23,3 +23,5 @@ export const EN_REQUIRED_MESSAGE = "Please select an answer";
 export const EN_YES = "Yes";
 export const EN_NO = "No";
 export const EN_AGREE_SHARE_INFO = "Do you agree to share your data?";
+
+export const SUBMISSIONS_ARCHIVE_NAME = "submissions.zip";

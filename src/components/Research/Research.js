@@ -5,7 +5,8 @@ import {List, Avatar, Button} from 'antd';
 import styled from 'styled-components';
 import endpoints from '../endpoints';
 import formExistsAction from "../../actions/formExistsAction";
-import {EN, IT, RO} from "../constants";
+import {EN, IT, RO, SUBMISSIONS_ARCHIVE_NAME} from "../constants";
+import fileDownload from 'js-file-download';
 
 const ClickableStyle = styled.div`
     cursor: pointer;
@@ -53,7 +54,10 @@ const Research = (props) => {
     const getActions = (item) => {
         //neavand alt fel de utilizatori decat admin, imi permit sa verific doar daca e logat TODO: sa schimbam conditia
         if (props.logInStatusReducer.loggedIn) {
-            return [<ClickableStyle onClick={handleEditResearch(item)}>EDIT</ClickableStyle>]
+            return [
+                <ClickableStyle onClick={handleEditResearch(item)}>EDIT</ClickableStyle>,
+                <ClickableStyle onClick={handleDownloadSubmissions(item)}>DOWNLOAD SUBMISSIONS</ClickableStyle>
+            ]
         }
 
         return [];
@@ -71,6 +75,16 @@ const Research = (props) => {
         props.history.push("/editResearch", {
             research: item
         });
+    };
+
+    const handleDownloadSubmissions = (item) => () => {
+        axios.get(endpoints.GET_SUBMISSIONS + '/' + item.id, { responseType: 'arraybuffer' })
+            .then(response => {
+                fileDownload(response.data, SUBMISSIONS_ARCHIVE_NAME);
+            })
+            .catch(err => {
+                alert('Something went wrong while retrieving submissions');
+            })
     };
 
     const handleItemClick = (item) => () => {
