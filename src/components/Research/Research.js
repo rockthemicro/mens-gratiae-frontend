@@ -56,7 +56,7 @@ const Research = (props) => {
         if (props.logInStatusReducer.loggedIn) {
             return [
                 <ClickableStyle onClick={handleEditResearch(item)}>EDIT</ClickableStyle>,
-                <ClickableStyle onClick={handleDownloadSubmissions(item)}>DOWNLOAD SUBMISSIONS</ClickableStyle>
+                <ClickableStyle onClick={handleDownloadSubmissions(item)}>-</ClickableStyle>
             ]
         }
 
